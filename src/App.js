@@ -77,7 +77,6 @@ function App() {
           />
         ))}
         <Route path="/login" element={<SignIn />} />
-        {/* Rediriger vers la page de connexion si la route demandée n'existe pas */}
         <Route path="*" element={<Navigate to="/login" />} />
       </Routes>
     </ThemeProvider>
