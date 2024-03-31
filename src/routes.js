@@ -1,20 +1,16 @@
 // Material Dashboard 2 React layouts
 import Dashboard from "layouts/dashboard";
-import Tables from "layouts/tables";
-import Billing from "layouts/billing";
-import RTL from "layouts/rtl";
-import Notifications from "layouts/notifications";
-import Profile from "layouts/profile";
+import Categorie from "layouts/categorie";
+import Produit from "layouts/produits";
+import Stock from "layouts/stock";
 import SignIn from "layouts/authentication/sign-in";
-import SignUp from "layouts/authentication/sign-up";
-
 // @mui icons
 import Icon from "@mui/material/Icon";
 
 const routes = [
   {
     type: "collapse",
-    name: "Acceuil",
+    name: "Accueil",
     key: "dashboard",
     icon: <Icon fontSize="small">dashboard</Icon>,
     route: "/dashboard",
@@ -23,26 +19,26 @@ const routes = [
   {
     type: "collapse",
     name: "Categorie",
-    key: "tables",
+    key: "categorie",
     icon: <Icon fontSize="small">table_view</Icon>,
-    route: "/tables",
-    component: <Tables />,
+    route: "/categorie",
+    component: <Categorie />,
   },
   {
     type: "collapse",
     name: "Produits",
-    key: "billing",
+    key: "product",
     icon: <Icon fontSize="small">receipt_long</Icon>,
-    route: "/billing",
-    component: <Billing />,
+    route: "/produits",
+    component: <Produit />,
   },
   {
     type: "collapse",
     name: "Stock",
-    key: "sign-in",
-    icon: <Icon fontSize="small">login</Icon>,
-    route: "/authentication/sign-in",
-    component: <SignIn />,
+    key: "stock",
+    icon: <Icon fontSize="small">store</Icon>,
+    route: "/stock",
+    component: <Stock />,
   },
 ];
 
