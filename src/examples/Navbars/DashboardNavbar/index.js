@@ -77,7 +77,6 @@ function DashboardNavbar({ absolute, light, isMini }) {
   }
 
   const handleMiniSidenav = () => setMiniSidenav(dispatch, !miniSidenav);
-  const handleCloseMenu = () => setOpenMenu(false);
 
   // Styles for the navbar icons
   const iconsStyle = ({ palette: { dark, white, text }, functions: { rgba } }) => ({
