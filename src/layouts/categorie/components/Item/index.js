@@ -11,22 +11,10 @@ import MDButton from "components/MDButton";
 
 // Material Dashboard 2 React context
 import { useMaterialUIController } from "context";
-import { deleteCategory } from "bd/Categorie";
 
-function Item({ id, name, description, noGutter }) {
+function Item({ id, name, description, noGutter, onDelete }) {
   const [controller] = useMaterialUIController();
   const { darkMode } = controller;
-
-  const handleDelete = () => {
-    deleteCategory(id)
-      .then(() => {
-        console.log("Catégorie supprimée avec succès.");
-        window.location.reload();
-      })
-      .catch((error) => {
-        console.error("Une erreur s'est produite lors de la suppression de la catégorie:", error);
-      });
-  };
 
   return (
     <MDBox
@@ -54,7 +42,7 @@ function Item({ id, name, description, noGutter }) {
 
           <MDBox display="flex" alignItems="center" mt={{ xs: 2, sm: 0 }} ml={{ xs: -1.5, sm: 0 }}>
             <MDBox mr={1}>
-              <MDButton variant="text" color="error" onClick={handleDelete}>
+              <MDButton variant="text" color="error" onClick={onDelete}>
                 <Icon>delete</Icon>&nbsp;Supprimer
               </MDButton>
             </MDBox>
@@ -83,10 +71,11 @@ Item.defaultProps = {
 
 // Typechecking props for the Item
 Item.propTypes = {
-  id: PropTypes.number.isRequired,
+  id: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
   description: PropTypes.string.isRequired,
   noGutter: PropTypes.bool,
+  onDelete: PropTypes.func.isRequired,
 };
 
 export default Item;
