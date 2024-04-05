@@ -10,7 +10,8 @@ import PropTypes from "prop-types";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
-import Menu from "@mui/material/Menu";
+import { signOut } from "firebase/auth";
+import { auth } from "../../../firebase";
 import Icon from "@mui/material/Icon";
 import { useNavigate } from "react-router-dom";
 // Material Dashboard 2 React components
@@ -18,7 +19,6 @@ import MDBox from "components/MDBox";
 
 // Material Dashboard 2 React example components
 import Breadcrumbs from "examples/Breadcrumbs";
-import NotificationItem from "examples/Items/NotificationItem";
 
 // Custom styles for DashboardNavbar
 import {
@@ -30,12 +30,9 @@ import {
 } from "examples/Navbars/DashboardNavbar/styles";
 
 // Material Dashboard 2 React context
-import {
-  useMaterialUIController,
-  setTransparentNavbar,
-  setMiniSidenav,
-  setOpenConfigurator,
-} from "context";
+import { useMaterialUIController, setTransparentNavbar, setMiniSidenav } from "context";
+import NotificationItem from "examples/Items/NotificationItem";
+import { Menu } from "@mui/material";
 
 function DashboardNavbar({ absolute, light, isMini }) {
   const [userName, setUserName] = useState(localStorage.getItem("name") || "");
@@ -72,8 +69,14 @@ function DashboardNavbar({ absolute, light, isMini }) {
   }, [dispatch, fixedNavbar]);
 
   function handleSignOut() {
-    localStorage.removeItem("token");
-    navigate("/login");
+    signOut(auth)
+      .then(() => {
+        localStorage.removeItem("token");
+        navigate("/login");
+      })
+      .catch((error) => {
+        console.log("Erreur de deconnexion !");
+      });
   }
 
   const handleMiniSidenav = () => setMiniSidenav(dispatch, !miniSidenav);

@@ -27,7 +27,7 @@ const routes = [
   {
     type: "collapse",
     name: "Produits",
-    key: "product",
+    key: "produits",
     icon: <Icon fontSize="small">receipt_long</Icon>,
     route: "/produits",
     component: <Produit />,

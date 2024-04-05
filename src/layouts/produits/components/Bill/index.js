@@ -1,95 +1,219 @@
-// prop-types is a library for typechecking of props
+import React, { useState } from "react";
 import PropTypes from "prop-types";
-
-// @mui material components
-import Icon from "@mui/material/Icon";
-
-// Material Dashboard 2 React components
 import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
 import MDButton from "components/MDButton";
+import Icon from "@mui/material/Icon";
+import { Card, Snackbar, SnackbarContent } from "@mui/material";
+import { deleteDoc, doc, query, where, getDocs, collection, updateDoc } from "firebase/firestore";
+import { db } from "../../../../firebase";
+import ModifyProductModal from "layouts/produits/modal/ModifyProductModal";
 
-// Material Dashboard 2 React context
-import { useMaterialUIController } from "context";
+function Bill({ productName, description, price, quantity, imageUrl, category }) {
+  const [successAlertOpen, setSuccessAlertOpen] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
+  const [productToModify, setProductToModify] = useState(null);
 
-function Bill({ name, company, email, vat, noGutter }) {
-  const [controller] = useMaterialUIController();
-  const { darkMode } = controller;
+  const handleOpenModal = (product) => {
+    setProductToModify(product);
+    setOpenModal(true);
+  };
+  const handleSuccessAlertClose = () => {
+    setSuccessAlertOpen(false);
+  };
+  const handleCloseModal = () => {
+    setProductToModify(null);
+    setOpenModal(false);
+  };
+
+  const handleSubmit = async (editedProduct) => {
+    try {
+      // Effectuer une requête pour trouver le document correspondant au nom du produit
+      const productQuery = query(
+        collection(db, "products"),
+        where("productName", "==", editedProduct.productName)
+      );
+      const productQuerySnapshot = await getDocs(productQuery);
+
+      // Vérifier si le produit a été trouvé
+      if (!productQuerySnapshot.empty) {
+        // Récupérer l'ID du document trouvé
+        const productId = productQuerySnapshot.docs[0].id;
+
+        // Mettre à jour le document correspondant avec les nouvelles données
+        const productDocRef = doc(db, "products", productId);
+        await updateDoc(productDocRef, {
+          productName: editedProduct.productName,
+          description: editedProduct.description,
+          price: editedProduct.price,
+          quantity: editedProduct.quantity,
+          category: editedProduct.category,
+          imageUrl: editedProduct.imageUrl,
+        });
+
+        console.log("Product updated successfully!");
+        setOpenModal(false);
+        setSuccessAlertOpen(true);
+      } else {
+        console.log("Product not found:", editedProduct.productName);
+      }
+    } catch (error) {
+      console.error("Error updating product:", error);
+    }
+  };
+
+  const handleDelete = async () => {
+    try {
+      const productQuery = query(
+        collection(db, "products"),
+        where("productName", "==", productName)
+      );
+      const productQuerySnapshot = await getDocs(productQuery);
+
+      if (!productQuerySnapshot.empty) {
+        const productId = productQuerySnapshot.docs[0].id;
+        await deleteDoc(doc(db, "products", productId));
+        console.log("produit supprimé avec succès");
+      } else {
+        console.log("Product not found:", productName);
+      }
+    } catch (error) {
+      console.error("Error deleting product:", error);
+    }
+  };
+  const handleModify = async () => {
+    //
+  };
 
   return (
-    <MDBox
-      component="li"
-      display="flex"
-      justifyContent="space-between"
-      alignItems="flex-start"
-      bgColor={darkMode ? "transparent" : "grey-100"}
-      borderRadius="lg"
-      p={3}
-      mb={noGutter ? 0 : 1}
-      mt={2}
-    >
-      <MDBox width="100%" display="flex" flexDirection="column">
+    <>
+      <Card
+        variant="outlined"
+        sx={{
+          backgroundColor: "light",
+          borderRadius: "8px",
+          boxShadow: 1,
+          marginBottom: "1rem",
+        }}
+      >
         <MDBox
+          component="li"
           display="flex"
-          justifyContent="space-between"
-          alignItems={{ xs: "flex-start", sm: "center" }}
-          flexDirection={{ xs: "column", sm: "row" }}
-          mb={2}
+          ustifyContent="space-between"
+          alignItems="center"
+          p={2}
+          mt={2}
+          borderRadius="8px"
+          boxShadow={1}
+          bgcolor="black"
         >
-          <MDTypography variant="button" fontWeight="medium" textTransform="capitalize">
-            {name}
-          </MDTypography>
+          <MDBox width="33%">
+            <img src={imageUrl} alt="Product" style={{ width: "100%", height: "auto" }} />
+          </MDBox>
 
-          <MDBox display="flex" alignItems="center" mt={{ xs: 2, sm: 0 }} ml={{ xs: -1.5, sm: 0 }}>
+          <MDBox width="calc(100% - 33%)" ml={5}>
+            <MDTypography variant="h6" fontWeight="medium" textTransform="capitalize" mb={1}>
+              Nom : {productName}
+            </MDTypography>
+            <MDBox mb={1}>
+              <MDTypography variant="body2" fontWeight="medium">
+                Description : {description}
+              </MDTypography>
+            </MDBox>
+            <MDBox
+              display="flex"
+              justifyContent="space-between"
+              fontWeight="medium"
+              alignItems="center"
+              mb={1}
+            >
+              <MDTypography variant="body2" fontWeight="medium">
+                Prix : {price} Fcfa
+              </MDTypography>
+            </MDBox>
+            <MDBox
+              display="flex"
+              justifyContent="space-between"
+              fontWeight="medium"
+              alignItems="center"
+              mb={1}
+            >
+              <MDTypography variant="body2" fontWeight="medium">
+                Quantité : {quantity}
+              </MDTypography>
+            </MDBox>
+            <MDBox
+              display="flex"
+              justifyContent="space-between"
+              fontWeight="medium"
+              alignItems="center"
+            >
+              <MDTypography variant="body2" fontWeight="medium">
+                Catégorie : {category}
+              </MDTypography>
+            </MDBox>
+          </MDBox>
+
+          <MDBox display="flex" alignItems="center">
             <MDBox mr={1}>
-              <MDButton variant="text" color="error">
-                <Icon>delete</Icon>&nbsp;delete
+              <MDButton variant="contained" color="error" size="medium" onClick={handleDelete}>
+                <Icon>delete</Icon>
               </MDButton>
             </MDBox>
-            <MDButton variant="text" color={darkMode ? "white" : "dark"}>
-              <Icon>edit</Icon>&nbsp;edit
+            <MDButton
+              variant="contained"
+              color="dark"
+              size="medium"
+              onClick={() =>
+                handleOpenModal({
+                  productName,
+                  description,
+                  price,
+                  quantity,
+                  imageUrl,
+                  category,
+                })
+              }
+            >
+              <Icon>edit</Icon>
             </MDButton>
           </MDBox>
+          <MDBox p={2}>
+            {/* Modal pour modifier un produit */}
+            <ModifyProductModal
+              open={openModal}
+              handleClose={handleCloseModal}
+              handleSubmit={handleSubmit}
+              initialProduct={productToModify}
+            />
+          </MDBox>
         </MDBox>
-        <MDBox mb={1} lineHeight={0}>
-          <MDTypography variant="caption" color="text">
-            Company Name:&nbsp;&nbsp;&nbsp;
-            <MDTypography variant="caption" fontWeight="medium" textTransform="capitalize">
-              {company}
-            </MDTypography>
-          </MDTypography>
-        </MDBox>
-        <MDBox mb={1} lineHeight={0}>
-          <MDTypography variant="caption" color="text">
-            Email Address:&nbsp;&nbsp;&nbsp;
-            <MDTypography variant="caption" fontWeight="medium">
-              {email}
-            </MDTypography>
-          </MDTypography>
-        </MDBox>
-        <MDTypography variant="caption" color="text">
-          VAT Number:&nbsp;&nbsp;&nbsp;
-          <MDTypography variant="caption" fontWeight="medium">
-            {vat}
-          </MDTypography>
-        </MDTypography>
-      </MDBox>
-    </MDBox>
+      </Card>
+      <Snackbar
+        open={successAlertOpen}
+        autoHideDuration={5000}
+        onClose={handleSuccessAlertClose}
+        color="success"
+        message="La classe a été ajoutée avec succès."
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+      >
+        <SnackbarContent
+          sx={{ backgroundColor: "#4CAF50" }}
+          message="Le produit a été modifiée avec succès."
+        />
+      </Snackbar>
+    </>
   );
 }
 
-// Setting default values for the props of Bill
-Bill.defaultProps = {
-  noGutter: false,
-};
-
-// Typechecking props for the Bill
+// Prop types validation
 Bill.propTypes = {
-  name: PropTypes.string.isRequired,
-  company: PropTypes.string.isRequired,
-  email: PropTypes.string.isRequired,
-  vat: PropTypes.string.isRequired,
-  noGutter: PropTypes.bool,
+  productName: PropTypes.string.isRequired,
+  description: PropTypes.string.isRequired,
+  price: PropTypes.string.isRequired,
+  quantity: PropTypes.string.isRequired,
+  imageUrl: PropTypes.string.isRequired,
+  category: PropTypes.string.isRequired,
 };
 
 export default Bill;
