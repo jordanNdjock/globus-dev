@@ -27,6 +27,7 @@ import {
 } from "firebase/storage";
 import { db } from "../../../../firebase";
 import ModifyProductModal from "layouts/produits/modal/ModifyProductModal";
+import { Link } from "react-router-dom";
 
 function Bill({
   productName,
@@ -210,7 +211,7 @@ function Bill({
           bgcolor="black"
         >
           <MDBox
-            width={{ xs: "100%", sm: "33%" }}
+            width={{ xs: "100%", sm: "43%", height: "100%" }}
             display="flex"
             alignItems="center"
             justifyContent="center"
@@ -318,14 +319,16 @@ function Bill({
               </MDButton>
             </MDBox>
             <MDBox display="flex" alignItems="center">
-              <MDButton
-                variant="contained"
-                color="info"
-                size="medium"
-                sx={{ display: { xs: "none", sm: "flex" } }}
-              >
-                <Icon>visibility</Icon>
-              </MDButton>
+              <Link to={`/produits/${productName}`} color="dark">
+                <MDButton
+                  variant="contained"
+                  color="info"
+                  size="medium"
+                  sx={{ display: { xs: "none", sm: "flex" } }}
+                >
+                  <Icon color="white">visibility</Icon>
+                </MDButton>
+              </Link>
             </MDBox>
           </MDBox>
           <MDBox p={2}>
@@ -364,9 +367,11 @@ function Bill({
             >
               Modifier &nbsp;<Icon color="info">edit</Icon>
             </MenuItem>
-            <MenuItem onClick={() => console.log("Voir détails")}>
-              Voir détails &nbsp;<Icon color="dark">visibility</Icon>
-            </MenuItem>
+            <Link to={`/produits/${productName}`} color="dark">
+              <MenuItem>
+                Voir détails &nbsp;<Icon>visibility</Icon>
+              </MenuItem>
+            </Link>
           </Menu>
         </MDBox>
       </Card>

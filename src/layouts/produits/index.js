@@ -15,7 +15,7 @@ import BillingInformation from "layouts/produits/components/BillingInformation";
 export default function Produit() {
   return (
     <DashboardLayout>
-      <DashboardNavbar absolute isMini />
+      <DashboardNavbar />
       <MDBox mt={8}>
         <MDBox mb={3}>
           <Grid container spacing={3}>
