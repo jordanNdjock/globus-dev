@@ -5,12 +5,41 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
+import IconButton from "@mui/material/IconButton";
+import PhotoCamera from "@mui/icons-material/PhotoCamera";
+import DeleteIcon from "@mui/icons-material/Delete";
 
-function ModifyProductModal({ open, handleClose, handleSubmit, initialProduct }) {
+function ModifyProductModal({
+  open,
+  handleClose,
+  handleSubmit,
+  initialProduct,
+}) {
   // Vérifier si initialProduct est null
   if (!initialProduct) {
     return null;
   }
+
+  const handleImageChange = (event) => {
+    const file = event.target.files[0];
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setEditedProduct({
+        ...editedProduct,
+        imageUrl: reader.result,
+      });
+    };
+    if (file) {
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleImageRemove = () => {
+    setEditedProduct({
+      ...editedProduct,
+      imageUrl: "",
+    });
+  };
 
   const { imageUrl } = initialProduct;
 
@@ -42,12 +71,55 @@ function ModifyProductModal({ open, handleClose, handleSubmit, initialProduct })
           Modifier le produit
         </Typography>
         {/* Affichage de l'image */}
-        <img
-          src={imageUrl}
-          alt="Product"
-          style={{ width: "100%", height: "auto", marginBottom: "16px" }}
-        />
-
+        {editedProduct.imageUrl && (
+          <Box sx={{ textAlign: "center", mb: 5 }}>
+            <IconButton color="error" onClick={handleImageRemove}>
+              <DeleteIcon />
+            </IconButton>
+            <Box
+              sx={{
+                width: 100,
+                height: 100,
+                borderRadius: "50%",
+                overflow: "hidden",
+                margin: "0 auto",
+                border: "2px solid #ccc",
+              }}
+            >
+              <img
+                src={editedProduct.imageUrl}
+                alt="Product"
+                style={{
+                  width: "100%",
+                  height: "auto",
+                  objectFit: "cover",
+                  backgroundSize: "cover",
+                }}
+              />
+            </Box>
+          </Box>
+        )}
+        <Box sx={{ display: "flex", alignItems: "center", mb: 3 }}>
+          <input
+            accept="image/*"
+            id="image-upload"
+            type="file"
+            onChange={handleImageChange}
+            style={{ display: "none" }}
+          />
+          <label htmlFor="image-upload">
+            <IconButton
+              color="primary"
+              aria-label="upload picture"
+              component="span"
+            >
+              <PhotoCamera />
+            </IconButton>
+          </label>
+          <Typography variant="body2" color="textSecondary" sx={{ ml: 1 }}>
+            Choisir une image
+          </Typography>
+        </Box>
         {/* Champ de texte pour le nom du produit */}
         <TextField
           label="Nom du produit"
@@ -92,6 +164,7 @@ function ModifyProductModal({ open, handleClose, handleSubmit, initialProduct })
           type="number"
           variant="outlined"
           name="quantity"
+          disabled
           value={editedProduct.quantity}
           onChange={handleFieldChange}
           sx={{ mb: 2 }}

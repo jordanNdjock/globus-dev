@@ -26,7 +26,7 @@ function ProductInformation() {
     return () => unsubscribe();
   }, []);
 
-  const productsPerPage = 10;
+  const productsPerPage = 5;
   const totalPages = Math.ceil(products.length / productsPerPage);
 
   const handleNextPage = () => {
@@ -54,18 +54,34 @@ function ProductInformation() {
       </MDBox>
       <MDBox pt={1} pb={2} px={2}>
         {loading ? (
-          <MDBox display="flex" justifyContent="center" alignItems="center" height="100px">
+          <MDBox
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+            height="100px"
+          >
             <CircularProgress color="info" />
           </MDBox>
         ) : (
           <>
-            <MDBox component="ul" display="flex" flexDirection="column" p={0} m={0}>
+            <MDBox
+              component="ul"
+              display="flex"
+              flexDirection="column"
+              p={0}
+              m={0}
+            >
               {currentProducts.map((product) => (
                 <Product key={product.id} {...product} />
               ))}
             </MDBox>
-            {totalPages > 1 && products.length > 10 && (
-              <MDBox display="flex" justifyContent="center" alignItems="center" mt={2}>
+            {totalPages > 1 && products.length > 5 && (
+              <MDBox
+                display="flex"
+                justifyContent="center"
+                alignItems="center"
+                mt={2}
+              >
                 <MDBox mr={2}>
                   <MDButton
                     variant="contained"

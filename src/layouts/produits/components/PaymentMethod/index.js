@@ -8,10 +8,15 @@ import MDButton from "components/MDButton";
 import AddProductModal from "layouts/produits/modal/AddProductModal";
 import { db } from "../../../../firebase";
 import { collection, addDoc } from "firebase/firestore";
-import { ref, uploadString, getDownloadURL, getStorage } from "firebase/storage";
+import {
+  ref,
+  uploadString,
+  getDownloadURL,
+  getStorage,
+} from "firebase/storage";
 import { Snackbar, SnackbarContent } from "@mui/material";
 
-function PaymentMethod() {
+function GestionProduit() {
   const [openModal, setOpenModal] = useState(false);
   const [successAlertOpen, setSuccessAlertOpen] = useState(false);
 
@@ -60,7 +65,13 @@ function PaymentMethod() {
   return (
     <>
       <Card id="delete-account">
-        <MDBox pt={2} px={2} display="flex" justifyContent="space-between" alignItems="center">
+        <MDBox
+          pt={2}
+          px={2}
+          display="flex"
+          justifyContent="space-between"
+          alignItems="center"
+        >
           <MDTypography variant="h6" fontWeight="medium">
             Gestion des Produits
           </MDTypography>
@@ -95,4 +106,4 @@ function PaymentMethod() {
   );
 }
 
-export default PaymentMethod;
+export default GestionProduit;

@@ -60,7 +60,11 @@ function App() {
       {layout === "dashboard" && (
         <Sidenav
           color={sidenavColor}
-          brand={(transparentSidenav && !darkMode) || whiteSidenav ? brandDark : brandWhite}
+          brand={
+            (transparentSidenav && !darkMode) || whiteSidenav
+              ? brandDark
+              : brandWhite
+          }
           brandName="Globus"
           routes={routes}
           onMouseEnter={handleOnMouseEnter}
@@ -73,7 +77,13 @@ function App() {
           <Route
             key={route.key}
             path={route.route}
-            element={isAuthenticated() ? route.component : <Navigate to="/login" replace />}
+            element={
+              isAuthenticated() ? (
+                route.component
+              ) : (
+                <Navigate to="/login" replace />
+              )
+            }
           />
         ))}
         <Route path="/login" element={<SignIn />} />

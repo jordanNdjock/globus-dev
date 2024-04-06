@@ -139,7 +139,11 @@ function AddProductModal({ open, handleClose, handleSubmit }) {
             style={{ display: "none" }}
           />
           <label htmlFor="image-upload">
-            <IconButton color="primary" aria-label="upload picture" component="span">
+            <IconButton
+              color="primary"
+              aria-label="upload picture"
+              component="span"
+            >
               <PhotoCamera />
             </IconButton>
           </label>
