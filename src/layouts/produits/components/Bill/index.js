@@ -5,6 +5,10 @@ import MDTypography from "components/MDTypography";
 import MDButton from "components/MDButton";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import Icon from "@mui/material/Icon";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import IconButton from "@mui/material/IconButton";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { Card, Snackbar, SnackbarContent } from "@mui/material";
 import {
   deleteDoc,
@@ -39,11 +43,11 @@ function Bill({
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [anchorEl, setAnchorEl] = useState(null);
 
-  const handleClick = (event) => {
+  const handleMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
   };
 
-  const handleClose = () => {
+  const handleMenuClose = () => {
     setAnchorEl(null);
   };
 
@@ -98,6 +102,7 @@ function Bill({
     setOpenModal(false);
   };
 
+  //modification du produit
   const handleSubmit = async (editedProduct) => {
     try {
       let storage = getStorage();
@@ -110,33 +115,48 @@ function Bill({
 
       // Vérifier si le produit a été trouvé
       if (!productQuerySnapshot.empty) {
-        // Récupérer l'ID du document trouvé
         const productId = productQuerySnapshot.docs[0].id;
-        let imageUrlToUpdate = productQuerySnapshot.docs[0].imageUrl;
+        const productData = productQuerySnapshot.docs[0].data();
+        const currentImageUrl = productData.imageUrl;
 
         // Vérifier si l'URL de l'image a changé
-        if (editedProduct.imageUrl !== imageUrlToUpdate) {
+        if (editedProduct.imageUrl !== currentImageUrl) {
           // Si l'URL de l'image a changé, télécharger et mettre à jour l'image dans le stockage
           const imageRef = ref(storage, `images/${editedProduct.productName}`);
           await uploadString(imageRef, editedProduct.imageUrl, "data_url");
-          imageUrl = await getDownloadURL(imageRef);
+          const imageUrlToUpdate = await getDownloadURL(imageRef);
+
+          // Mettre à jour le document correspondant avec les nouvelles données
+          const productDocRef = doc(db, "products", productId);
+          await updateDoc(productDocRef, {
+            productName: editedProduct.productName,
+            description: editedProduct.description,
+            price: editedProduct.price,
+            quantity: editedProduct.quantity,
+            category: editedProduct.category,
+            imageUrl: imageUrlToUpdate,
+          });
+
+          console.log("Product updated successfully!");
+          setOpenModal(false);
+          setSnackbarMessage("Le produit a été modifié avec succès !");
+          setSuccessAlertOpen(true);
+        } else {
+          // Si l'URL de l'image n'a pas changé, mettre à jour le document sans télécharger l'image
+          const productDocRef = doc(db, "products", productId);
+          await updateDoc(productDocRef, {
+            productName: editedProduct.productName,
+            description: editedProduct.description,
+            price: editedProduct.price,
+            quantity: editedProduct.quantity,
+            category: editedProduct.category,
+          });
+
+          console.log("Product updated successfully!");
+          setOpenModal(false);
+          setSnackbarMessage("Le produit a été modifié avec succès !");
+          setSuccessAlertOpen(true);
         }
-
-        // Mettre à jour le document correspondant avec les nouvelles données
-        const productDocRef = doc(db, "products", productId);
-        await updateDoc(productDocRef, {
-          productName: editedProduct.productName,
-          description: editedProduct.description,
-          price: editedProduct.price,
-          quantity: editedProduct.quantity,
-          category: editedProduct.category,
-          imageUrl: imageUrl ? imageUrl : imageUrlToUpdate,
-        });
-
-        console.log("Product updated successfully!");
-        setOpenModal(false);
-        setSnackbarMessage("Le produit a été modifié avec succès !");
-        setSuccessAlertOpen(true);
       } else {
         console.log("Product not found:", editedProduct.productName);
       }
@@ -145,6 +165,7 @@ function Bill({
     }
   };
 
+  //suppression du produit
   const handleDelete = async () => {
     try {
       const productQuery = query(
@@ -174,6 +195,7 @@ function Bill({
           borderRadius: "8px",
           boxShadow: 1,
           marginBottom: "1rem",
+          flexDirection: { xs: "column", sm: "row" },
         }}
       >
         <MDBox
@@ -187,15 +209,25 @@ function Bill({
           boxShadow={1}
           bgcolor="black"
         >
-          <MDBox width={{ xs: "70%", sm: "33%" }}>
+          <MDBox
+            width={{ xs: "100%", sm: "33%" }}
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+            bgcolor="black"
+          >
             <img
               src={imageUrl}
               alt="Product"
-              style={{ width: "100%", height: "auto" }}
+              style={{ maxWidth: "100%", height: "auto" }}
             />
           </MDBox>
 
-          <MDBox width="calc(100% - 33%)" ml={5}>
+          <MDBox
+            width={{ xs: "100%", sm: "calc(67% - 40px)" }}
+            p={2}
+            ml={{ xs: 0, sm: 2 }}
+          >
             <MDTypography
               variant="h4"
               fontWeight="medium"
@@ -305,6 +337,37 @@ function Bill({
               initialProduct={productToModify}
             />
           </MDBox>
+        </MDBox>
+        <MDBox display={{ xs: "block", sm: "none" }} ml="auto" p={2}>
+          <IconButton onClick={handleMenuOpen}>
+            <MoreVertIcon />
+          </IconButton>
+          <Menu
+            anchorEl={anchorEl}
+            open={Boolean(anchorEl)}
+            onClose={handleMenuClose}
+          >
+            <MenuItem onClick={handleDelete}>
+              Supprimer &nbsp;<Icon color="error">delete</Icon>
+            </MenuItem>
+            <MenuItem
+              onClick={() =>
+                handleOpenModal({
+                  productName,
+                  description,
+                  price,
+                  quantity,
+                  imageUrl,
+                  category,
+                })
+              }
+            >
+              Modifier &nbsp;<Icon color="info">edit</Icon>
+            </MenuItem>
+            <MenuItem onClick={() => console.log("Voir détails")}>
+              Voir détails &nbsp;<Icon color="dark">visibility</Icon>
+            </MenuItem>
+          </Menu>
         </MDBox>
       </Card>
       <Snackbar

@@ -59,12 +59,11 @@ function ModifyProductModal({
           top: "50%",
           left: "50%",
           transform: "translate(-50%, -50%)",
-          width: 450,
-          bgcolor: "white",
-          borderRadius: "8px",
           bgcolor: "background.paper",
           boxShadow: 24,
           p: 4,
+          borderRadius: "8px",
+          minWidth: 300,
         }}
       >
         <Typography variant="h6" fontWeight="medium" mb={2}>
