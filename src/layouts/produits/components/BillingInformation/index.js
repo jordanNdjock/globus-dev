@@ -1,46 +1,114 @@
-// @mui material components
-import Card from "@mui/material/Card";
-
-// Material Dashboard 2 React components
+import React, { useState, useEffect } from "react";
 import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
+import Product from "layouts/produits/components/Bill";
+import CircularProgress from "@mui/material/CircularProgress";
+import MDButton from "@mui/material/Button";
+import { collection, onSnapshot } from "firebase/firestore";
+import { db } from "../../../../firebase";
 
-// Billing page components
-import Bill from "layouts/produits/components/Bill";
+function ProductInformation() {
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
 
-function BillingInformation() {
+  useEffect(() => {
+    const unsubscribe = onSnapshot(collection(db, "products"), (snapshot) => {
+      const products = [];
+      snapshot.forEach((doc) => {
+        products.push({ id: doc.id, ...doc.data() });
+      });
+      setProducts(products);
+      setLoading(false);
+    });
+
+    // Retourner la fonction de désabonnement
+    return () => unsubscribe();
+  }, []);
+
+  const productsPerPage = 5;
+  const totalPages = Math.ceil(products.length / productsPerPage);
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  const handlePreviousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  const startIndex = (currentPage - 1) * productsPerPage;
+  const endIndex = startIndex + productsPerPage;
+  const currentProducts = products.slice(startIndex, endIndex);
+
   return (
-    <Card id="delete-account">
+    <>
       <MDBox pt={3} px={2}>
         <MDTypography variant="h6" fontWeight="medium">
-          Billing Information
+          Liste des produits
         </MDTypography>
       </MDBox>
       <MDBox pt={1} pb={2} px={2}>
-        <MDBox component="ul" display="flex" flexDirection="column" p={0} m={0}>
-          <Bill
-            name="oliver liam"
-            company="viking burrito"
-            email="oliver@burrito.com"
-            vat="FRB1235476"
-          />
-          <Bill
-            name="lucas harper"
-            company="stone tech zone"
-            email="lucas@stone-tech.com"
-            vat="FRB1235476"
-          />
-          <Bill
-            name="ethan james"
-            company="fiber notion"
-            email="ethan@fiber.com"
-            vat="FRB1235476"
-            noGutter
-          />
-        </MDBox>
+        {loading ? (
+          <MDBox
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+            height="100px"
+          >
+            <CircularProgress color="info" />
+          </MDBox>
+        ) : (
+          <>
+            <MDBox
+              component="ul"
+              display="flex"
+              flexDirection="column"
+              p={0}
+              m={0}
+            >
+              {currentProducts.map((product) => (
+                <Product key={product.id} {...product} />
+              ))}
+            </MDBox>
+            {totalPages > 1 && products.length > 5 && (
+              <MDBox
+                display="flex"
+                justifyContent="center"
+                alignItems="center"
+                mt={2}
+              >
+                <MDBox mr={2}>
+                  <MDButton
+                    variant="contained"
+                    color="primary"
+                    disabled={currentPage === 1}
+                    onClick={handlePreviousPage}
+                  >
+                    Page précédente
+                  </MDButton>
+                </MDBox>
+                <MDBox>
+                  <MDButton
+                    variant="contained"
+                    color="primary"
+                    disabled={currentPage === totalPages}
+                    onClick={handleNextPage}
+                  >
+                    Page suivante
+                  </MDButton>
+                </MDBox>
+              </MDBox>
+            )}
+          </>
+        )}
       </MDBox>
-    </Card>
+    </>
   );
 }
 
-export default BillingInformation;
+export default ProductInformation;
