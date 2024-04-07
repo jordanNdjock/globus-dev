@@ -10,6 +10,7 @@ import MenuItem from "@mui/material/MenuItem";
 import IconButton from "@mui/material/IconButton";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { Card, Snackbar, SnackbarContent } from "@mui/material";
+import Swal from "sweetalert2";
 import {
   deleteDoc,
   doc,
@@ -30,6 +31,7 @@ import ModifyProductModal from "layouts/produits/modal/ModifyProductModal";
 import { Link } from "react-router-dom";
 
 function Bill({
+  id,
   productName,
   description,
   price,
@@ -168,22 +170,45 @@ function Bill({
 
   //suppression du produit
   const handleDelete = async () => {
-    try {
-      const productQuery = query(
-        collection(db, "products"),
-        where("productName", "==", productName)
-      );
-      const productQuerySnapshot = await getDocs(productQuery);
+    const result = await Swal.fire({
+      title: "Êtes-vous sûr de vouloir supprimer ce  produit ?",
+      text: "Cette action est irréversible !",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Oui, supprimer",
+      cancelButtonText: "Annuler",
+    });
 
-      if (!productQuerySnapshot.empty) {
-        const productId = productQuerySnapshot.docs[0].id;
-        await deleteDoc(doc(db, "products", productId));
-        console.log("produit supprimé avec succès");
-      } else {
-        console.log("Product not found:", productName);
+    if (result.isConfirmed) {
+      try {
+        const productQuery = query(
+          collection(db, "products"),
+          where("productName", "==", productName)
+        );
+        const productQuerySnapshot = await getDocs(productQuery);
+
+        if (!productQuerySnapshot.empty) {
+          const productId = productQuerySnapshot.docs[0].id;
+          await deleteDoc(doc(db, "products", productId));
+          Swal.fire(
+            "Supprimé !",
+            "Le produit a été supprimé avec succès.",
+            "success"
+          );
+          console.log("produit supprimé avec succès");
+        } else {
+          console.log("Product not found:", productName);
+        }
+      } catch (error) {
+        console.error("Error deleting product:", error);
+        Swal.fire(
+          "Erreur !",
+          "Une erreur s'est produite lors de la suppression du produit.",
+          "error"
+        );
       }
-    } catch (error) {
-      console.error("Error deleting product:", error);
     }
   };
 
@@ -202,144 +227,139 @@ function Bill({
         <MDBox
           component="li"
           display="flex"
-          ustifyContent="space-between"
+          justifyContent="center"
           alignItems="center"
           p={2}
           mt={2}
           borderRadius="8px"
           boxShadow={1}
           bgcolor="black"
+          width="100%"
         >
+          <img
+            src={imageUrl}
+            alt="Product"
+            style={{ maxWidth: "100%", height: "auto" }}
+          />
+        </MDBox>
+
+        <MDBox
+          width="100%"
+          p={2}
+          ml={{ xs: 0, sm: 2 }}
+          style={{ textAlign: "center" }}
+        >
+          <MDTypography
+            variant="h3"
+            fontWeight="medium"
+            textTransform="capitalize"
+            mb={1}
+          >
+            {productName}
+          </MDTypography>
           <MDBox
-            width={{ xs: "100%", sm: "43%", height: "100%" }}
             display="flex"
-            alignItems="center"
             justifyContent="center"
-            bgcolor="black"
+            fontWeight="medium"
+            alignItems="center"
+            style={{ textAlign: "center" }}
+            mb={3}
           >
-            <img
-              src={imageUrl}
-              alt="Product"
-              style={{ maxWidth: "100%", height: "auto" }}
-            />
-          </MDBox>
-
-          <MDBox
-            width={{ xs: "100%", sm: "calc(67% - 40px)" }}
-            p={2}
-            ml={{ xs: 0, sm: 2 }}
-          >
-            <MDTypography
-              variant="h4"
-              fontWeight="medium"
-              textTransform="capitalize"
-              mb={1}
-            >
-              {productName}
+            <MDTypography variant="h6" fontWeight="medium">
+              {price} Fcfa
             </MDTypography>
-            <MDBox
-              display="flex"
-              justifyContent="space-between"
-              fontWeight="medium"
-              alignItems="center"
-              mb={1}
+          </MDBox>
+          <ButtonGroup size="small" variant="outlined" aria-label="quantity">
+            <MDButton
+              onClick={handleDecrease}
+              variant="contained"
+              size="small"
+              color="error"
             >
-              <MDTypography variant="h6" fontWeight="medium">
-                {price} Fcfa
-              </MDTypography>
-            </MDBox>
-            <ButtonGroup size="small" variant="outlined" aria-label="quantity">
-              <MDButton
-                onClick={handleDecrease}
-                variant="contained"
-                size="small"
-                color="error"
-              >
-                -
-              </MDButton>
-              <input
-                type="text"
-                value={productQuantity}
-                onChange={(event) =>
-                  handleChangeQuantity(productName, event.target.value)
-                }
-                style={{
-                  width: "50px",
-                  textAlign: "center",
-                  border: "1px solid #ced4da",
-                  borderRadius: "4px",
-                  outline: "none",
-                  borderRadius: "4px",
-                  padding: "8px 12px",
-                  fontSize: "14px",
-                  outline: "none",
-                }}
-              />
-              <MDButton
-                onClick={handleIncrease}
-                variant="contained"
-                size="small"
-                color="success"
-              >
-                +
-              </MDButton>
-            </ButtonGroup>
-          </MDBox>
-
-          <MDBox display="flex" alignItems="center">
-            <MDBox mr={1}>
-              <MDButton
-                variant="contained"
-                color="error"
-                size="medium"
-                sx={{ display: { xs: "none", sm: "flex" } }}
-                onClick={handleDelete}
-              >
-                <Icon>delete</Icon>
-              </MDButton>
-            </MDBox>
-            <MDBox mr={1}>
-              <MDButton
-                variant="contained"
-                color="dark"
-                size="medium"
-                sx={{ display: { xs: "none", sm: "flex" } }}
-                onClick={() =>
-                  handleOpenModal({
-                    productName,
-                    description,
-                    price,
-                    quantity,
-                    imageUrl,
-                    category,
-                  })
-                }
-              >
-                <Icon>edit</Icon>
-              </MDButton>
-            </MDBox>
-            <MDBox display="flex" alignItems="center">
-              <Link to={`/produits/${productName}`} color="dark">
-                <MDButton
-                  variant="contained"
-                  color="info"
-                  size="medium"
-                  sx={{ display: { xs: "none", sm: "flex" } }}
-                >
-                  <Icon color="white">visibility</Icon>
-                </MDButton>
-              </Link>
-            </MDBox>
-          </MDBox>
-          <MDBox p={2}>
-            {/* Modal pour modifier un produit */}
-            <ModifyProductModal
-              open={openModal}
-              handleClose={handleCloseModal}
-              handleSubmit={handleSubmit}
-              initialProduct={productToModify}
+              -
+            </MDButton>
+            <input
+              type="text"
+              value={productQuantity}
+              onChange={(event) =>
+                handleChangeQuantity(productName, event.target.value)
+              }
+              style={{
+                width: "50px",
+                textAlign: "center",
+                border: "1px solid #ced4da",
+                borderRadius: "4px",
+                outline: "none",
+                borderRadius: "4px",
+                padding: "8px 12px",
+                fontSize: "14px",
+                outline: "none",
+              }}
             />
+            <MDButton
+              onClick={handleIncrease}
+              variant="contained"
+              size="small"
+              color="success"
+            >
+              +
+            </MDButton>
+          </ButtonGroup>
+        </MDBox>
+
+        <MDBox display="flex" alignItems="center">
+          <MDBox mr={1}>
+            <MDButton
+              variant="contained"
+              color="error"
+              size="medium"
+              sx={{ display: { xs: "none", sm: "flex" } }}
+              onClick={handleDelete}
+            >
+              <Icon>delete</Icon>
+            </MDButton>
           </MDBox>
+          <MDBox mr={1}>
+            <MDButton
+              variant="contained"
+              color="dark"
+              size="medium"
+              sx={{ display: { xs: "none", sm: "flex" } }}
+              onClick={() =>
+                handleOpenModal({
+                  productName,
+                  description,
+                  price,
+                  quantity,
+                  imageUrl,
+                  category,
+                })
+              }
+            >
+              <Icon>edit</Icon>
+            </MDButton>
+          </MDBox>
+          <MDBox display="flex" alignItems="center">
+            <Link to={`/produits/${productName}`} color="dark">
+              <MDButton
+                variant="contained"
+                color="info"
+                size="medium"
+                sx={{ display: { xs: "none", sm: "flex" } }}
+              >
+                <Icon color="white">visibility</Icon>
+              </MDButton>
+            </Link>
+          </MDBox>
+        </MDBox>
+        <MDBox p={2}>
+          {/* Modal pour modifier un produit */}
+          <ModifyProductModal
+            open={openModal}
+            handleClose={handleCloseModal}
+            handleSubmit={handleSubmit}
+            initialProduct={productToModify}
+          />
         </MDBox>
         <MDBox display={{ xs: "block", sm: "none" }} ml="auto" p={2}>
           <IconButton onClick={handleMenuOpen}>
@@ -393,6 +413,7 @@ function Bill({
 
 // Prop types validation
 Bill.propTypes = {
+  id: PropTypes.string.isRequired,
   productName: PropTypes.string.isRequired,
   description: PropTypes.string.isRequired,
   price: PropTypes.string.isRequired,

@@ -14,12 +14,13 @@ import { signOut } from "firebase/auth";
 import { auth } from "../../../firebase";
 import Icon from "@mui/material/Icon";
 import { useNavigate } from "react-router-dom";
+import MenuIcon from "@mui/icons-material/Menu";
 // Material Dashboard 2 React components
 import MDBox from "components/MDBox";
 
 // Material Dashboard 2 React example components
 import Breadcrumbs from "examples/Breadcrumbs";
-
+import Swal from "sweetalert2";
 // Custom styles for DashboardNavbar
 import {
   navbar,
@@ -35,8 +36,6 @@ import {
   setTransparentNavbar,
   setMiniSidenav,
 } from "context";
-import NotificationItem from "examples/Items/NotificationItem";
-import { Menu } from "@mui/material";
 
 function DashboardNavbar({ absolute, light, isMini }) {
   const [userName, setUserName] = useState(localStorage.getItem("name") || "");
@@ -75,15 +74,33 @@ function DashboardNavbar({ absolute, light, isMini }) {
     return () => window.removeEventListener("scroll", handleTransparentNavbar);
   }, [dispatch, fixedNavbar]);
 
-  function handleSignOut() {
-    signOut(auth)
-      .then(() => {
-        localStorage.removeItem("token");
-        navigate("/login");
-      })
-      .catch((error) => {
-        console.log("Erreur de deconnexion !");
-      });
+  async function handleSignOut() {
+    const result = await Swal.fire({
+      title: "Êtes-vous sûr de vouloir vous déconnecter ?",
+      text: "Vous irez sur la page de connexion !",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Oui",
+      cancelButtonText: "Annuler",
+    });
+    if (result.isConfirmed) {
+      signOut(auth)
+        .then(() => {
+          localStorage.removeItem("token");
+          Swal.fire("Deconnecté !", "Deconnexion réussie !", "success");
+          navigate("/login");
+        })
+        .catch((error) => {
+          console.log("Erreur de deconnexion !");
+          Swal.fire(
+            "Erreur !",
+            "Une erreur s'est produite lors de la deconnexion.",
+            "error"
+          );
+        });
+    }
   }
 
   const handleMiniSidenav = () => setMiniSidenav(dispatch, !miniSidenav);
@@ -117,6 +134,7 @@ function DashboardNavbar({ absolute, light, isMini }) {
           color="inherit"
           mb={{ xs: 1, md: 0 }}
           sx={(theme) => navbarRow(theme, { isMini })}
+          display={{ xs: "none", sm: "block" }}
         >
           <Breadcrumbs
             icon="home"
@@ -127,9 +145,14 @@ function DashboardNavbar({ absolute, light, isMini }) {
         </MDBox>
         {isMini ? null : (
           <MDBox sx={(theme) => navbarRow(theme, { isMini })}>
-            <MDBox color={light ? "white" : "inherit"}>
+            <MDBox color={light ? "white" : "inherit"} sx={{ width: "100%" }}>
               <Link to="/dashboard">
-                <IconButton sx={navbarIconButton} size="small" disableRipple>
+                <IconButton
+                  sx={navbarIconButton}
+                  size="medium"
+                  disableRipple
+                  style={{ marginTop: "-2px" }}
+                >
                   <Icon
                     sx={iconsStyle}
                     className="text-primary"
@@ -137,25 +160,32 @@ function DashboardNavbar({ absolute, light, isMini }) {
                   >
                     account_circle
                   </Icon>
-                  <span style={{ marginLeft: "5px" }}>{userName}</span>
+                  <span style={{ marginLeft: "5px" }}>
+                    {userName.substring(0, 6)}
+                  </span>
                 </IconButton>
               </Link>
+
               <IconButton
-                size="small"
+                size="medium"
                 disableRipple
                 color="inherit"
                 sx={navbarMobileMenu}
                 onClick={handleMiniSidenav}
-              ></IconButton>
+                style={{ float: "right", marginTop: "-2px" }}
+              >
+                <MenuIcon />
+              </IconButton>
               <IconButton
-                size="small"
+                size="medium"
                 disableRipple
                 sx={navbarIconButton}
                 onClick={handleSignOut}
+                style={{ float: "right" }}
               >
                 <Icon
                   sx={iconsStyle}
-                  style={{ color: "red", fontWeight: "bold" }}
+                  style={{ color: "crimson", fontWeight: "bold" }}
                 >
                   logout
                 </Icon>
