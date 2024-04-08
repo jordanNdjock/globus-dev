@@ -54,9 +54,16 @@ function Item({ id, name, description, noGutter, onDelete }) {
       await updateCategory(id, name, description);
       setNameP(name);
       setDescriptionP(description);
-      Swal.fire("Mise à jour !", "La catégorie a été mise à jour avec succès.", "success");
+      Swal.fire(
+        "Mise à jour !",
+        "La catégorie a été mise à jour avec succès.",
+        "success"
+      );
     } catch (error) {
-      console.error("Une erreur s'est produite lors de la mise à jour de la catégorie :", error);
+      console.error(
+        "Une erreur s'est produite lors de la mise à jour de la catégorie :",
+        error
+      );
       // Afficher une alerte en cas d'erreur
       Swal.fire(
         "Erreur !",
@@ -87,7 +94,11 @@ function Item({ id, name, description, noGutter, onDelete }) {
             flexDirection={{ xs: "column", sm: "row" }}
             mb={2}
           >
-            <MDTypography variant="button" fontWeight="medium" textTransform="capitalize">
+            <MDTypography
+              variant="button"
+              fontWeight="medium"
+              textTransform="capitalize"
+            >
               {namePrint}
             </MDTypography>
 
@@ -102,7 +113,11 @@ function Item({ id, name, description, noGutter, onDelete }) {
                   <Icon>delete</Icon>&nbsp;Supprimer
                 </MDButton>
               </MDBox>
-              <MDButton variant="text" color={darkMode ? "white" : "dark"} onClick={handleOpen}>
+              <MDButton
+                variant="text"
+                color={darkMode ? "white" : "dark"}
+                onClick={handleOpen}
+              >
                 <Icon>edit</Icon>&nbsp;Modifier
               </MDButton>
             </MDBox>
@@ -110,7 +125,11 @@ function Item({ id, name, description, noGutter, onDelete }) {
           <MDBox mb={1} lineHeight={0}>
             <MDTypography variant="caption" color="text">
               Description:&nbsp;&nbsp;&nbsp;
-              <MDTypography variant="caption" fontWeight="medium" textTransform="capitalize">
+              <MDTypography
+                variant="caption"
+                fontWeight="medium"
+                textTransform="capitalize"
+              >
                 {descriptionPrint}
               </MDTypography>
             </MDTypography>

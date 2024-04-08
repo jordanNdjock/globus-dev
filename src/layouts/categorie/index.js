@@ -43,7 +43,10 @@ export default function Categorie() {
       setCategories(categoriesData);
       setLoading(false); // Mettez à jour l'état de chargement une fois que les catégories sont chargées
     } catch (error) {
-      console.error("Une erreur s'est produite lors de la récupération des catégories:", error);
+      console.error(
+        "Une erreur s'est produite lors de la récupération des catégories:",
+        error
+      );
       setLoading(false); // Assurez-vous de mettre à jour l'état de chargement même en cas d'erreur
     }
   };
@@ -70,9 +73,16 @@ export default function Categorie() {
         // Mettez à jour l'état en filtrant l'élément à supprimer
         setCategories(categories.filter((category) => category.id !== id));
         // Affichez une alerte pour indiquer que la catégorie a été supprimée avec succès
-        Swal.fire("Supprimé !", "La catégorie a été supprimée avec succès.", "success");
+        Swal.fire(
+          "Supprimé !",
+          "La catégorie a été supprimée avec succès.",
+          "success"
+        );
       } catch (error) {
-        console.error("Une erreur s'est produite lors de la suppression de la catégorie :", error);
+        console.error(
+          "Une erreur s'est produite lors de la suppression de la catégorie :",
+          error
+        );
         // Affichez une alerte en cas d'erreur
         Swal.fire(
           "Erreur !",
@@ -94,11 +104,17 @@ export default function Categorie() {
     addCategory(name, description)
       .then((categoryId) => {
         console.log("Catégorie ajoutée avec succès avec l'ID:", categoryId);
-        setCategories([...categories, { id: categoryId, name: name, description: description }]);
+        setCategories([
+          ...categories,
+          { id: categoryId, name: name, description: description },
+        ]);
         handleClose(); // Fermer le modal après la soumission
       })
       .catch((error) => {
-        console.error("Une erreur s'est produite lors de l'ajout de la catégorie:", error);
+        console.error(
+          "Une erreur s'est produite lors de l'ajout de la catégorie:",
+          error
+        );
       });
   };
 
@@ -106,19 +122,35 @@ export default function Categorie() {
     <DashboardLayout>
       <DashboardNavbar />
       <Card id="delete-account">
-        <MDBox pt={2} px={2} display="flex" justifyContent="space-between" alignItems="center">
+        <MDBox
+          pt={2}
+          px={2}
+          display="flex"
+          justifyContent="space-between"
+          alignItems="center"
+        >
           <MDTypography variant="h6" fontWeight="medium">
             Categorie
           </MDTypography>
           <MDButton variant="gradient" color="dark">
             <Icon sx={{ fontWeight: "bold" }}>add</Icon>
             &nbsp;
-            <ModalCategorie defaultName="" defaultDescription="" action={handleAddCategory} />
+            <ModalCategorie
+              defaultName=""
+              defaultDescription=""
+              action={handleAddCategory}
+            />
             {/* <Button onClick={handleOpen}>Nouvelle Categorie</Button> */}
           </MDButton>
         </MDBox>
         <MDBox pt={1} pb={2} px={2}>
-          <MDBox component="ul" display="flex" flexDirection="column" p={0} m={0}>
+          <MDBox
+            component="ul"
+            display="flex"
+            flexDirection="column"
+            p={0}
+            m={0}
+          >
             {loading ? (
               <Box
                 sx={{

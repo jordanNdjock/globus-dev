@@ -13,6 +13,7 @@ import brandDark from "assets/images/logo-ct-dark.png";
 import SignIn from "layouts/authentication/sign-in";
 import ProductDetails from "layouts/produits/ProductDetails";
 import Produit from "layouts/produits";
+import Home from "layouts/home";
 
 function App() {
   const [controller, dispatch] = useMaterialUIController();
@@ -89,9 +90,10 @@ function App() {
           />
         ))}
         <Route path="/login" element={<SignIn />} />
+        <Route path="/" element={<Home />} />
         <Route path="/produits/:productName" element={<ProductDetails />} />
         <Route path="/produits" element={<Produit />} />
-        <Route path="*" element={<Navigate to="/login" />} />
+        <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </ThemeProvider>
   );

@@ -24,7 +24,9 @@ const style = {
 function ModalCategorie({ defaultName, defaultDescription, action }) {
   const [open, setOpen] = React.useState(false);
   const [name, setName] = React.useState(defaultName || "");
-  const [description, setDescription] = React.useState(defaultDescription || "");
+  const [description, setDescription] = React.useState(
+    defaultDescription || ""
+  );
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
