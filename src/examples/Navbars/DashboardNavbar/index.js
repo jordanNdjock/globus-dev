@@ -42,7 +42,13 @@ function DashboardNavbar({ absolute, light, isMini }) {
   const navigate = useNavigate();
   const [navbarType, setNavbarType] = useState();
   const [controller, dispatch] = useMaterialUIController();
-  const { miniSidenav, transparentNavbar, fixedNavbar, openConfigurator, darkMode } = controller;
+  const {
+    miniSidenav,
+    transparentNavbar,
+    fixedNavbar,
+    openConfigurator,
+    darkMode,
+  } = controller;
   const [openMenu, setOpenMenu] = useState(false);
   const route = useLocation().pathname.split("/").slice(1);
 
@@ -56,7 +62,10 @@ function DashboardNavbar({ absolute, light, isMini }) {
 
     // A function that sets the transparent state of the navbar.
     function handleTransparentNavbar() {
-      setTransparentNavbar(dispatch, (fixedNavbar && window.scrollY === 0) || !fixedNavbar);
+      setTransparentNavbar(
+        dispatch,
+        (fixedNavbar && window.scrollY === 0) || !fixedNavbar
+      );
     }
 
     /** 
@@ -94,13 +103,22 @@ function DashboardNavbar({ absolute, light, isMini }) {
       sx={{ mt: 2 }}
     >
       <NotificationItem icon={<Icon>email</Icon>} title="Check new messages" />
-      <NotificationItem icon={<Icon>podcasts</Icon>} title="Manage Podcast sessions" />
-      <NotificationItem icon={<Icon>shopping_cart</Icon>} title="Payment successfully completed" />
+      <NotificationItem
+        icon={<Icon>podcasts</Icon>}
+        title="Manage Podcast sessions"
+      />
+      <NotificationItem
+        icon={<Icon>shopping_cart</Icon>}
+        title="Payment successfully completed"
+      />
     </Menu>
   );
 
   // Styles for the navbar icons
-  const iconsStyle = ({ palette: { dark, white, text }, functions: { rgba } }) => ({
+  const iconsStyle = ({
+    palette: { dark, white, text },
+    functions: { rgba },
+  }) => ({
     color: () => {
       let colorValue = light || darkMode ? white.main : dark.main;
 
@@ -116,18 +134,33 @@ function DashboardNavbar({ absolute, light, isMini }) {
     <AppBar
       position={absolute ? "absolute" : navbarType}
       color="inherit"
-      sx={(theme) => navbar(theme, { transparentNavbar, absolute, light, darkMode })}
+      sx={(theme) =>
+        navbar(theme, { transparentNavbar, absolute, light, darkMode })
+      }
     >
       <Toolbar sx={(theme) => navbarContainer(theme)}>
-        <MDBox color="inherit" mb={{ xs: 1, md: 0 }} sx={(theme) => navbarRow(theme, { isMini })}>
-          <Breadcrumbs icon="home" title={route[route.length - 1]} route={route} light={light} />
+        <MDBox
+          color="inherit"
+          mb={{ xs: 1, md: 0 }}
+          sx={(theme) => navbarRow(theme, { isMini })}
+        >
+          <Breadcrumbs
+            icon="home"
+            title={route[route.length - 1]}
+            route={route}
+            light={light}
+          />
         </MDBox>
         {isMini ? null : (
           <MDBox sx={(theme) => navbarRow(theme, { isMini })}>
             <MDBox color={light ? "white" : "inherit"}>
               <Link to="/">
                 <IconButton sx={navbarIconButton} size="small" disableRipple>
-                  <Icon sx={iconsStyle} className="text-primary" style={{ fontWeight: "bold" }}>
+                  <Icon
+                    sx={iconsStyle}
+                    className="text-primary"
+                    style={{ fontWeight: "bold" }}
+                  >
                     account_circle
                   </Icon>
                   <span style={{ marginLeft: "5px" }}>{userName}</span>
@@ -140,8 +173,16 @@ function DashboardNavbar({ absolute, light, isMini }) {
                 sx={navbarMobileMenu}
                 onClick={handleMiniSidenav}
               ></IconButton>
-              <IconButton size="small" disableRipple sx={navbarIconButton} onClick={handleSignOut}>
-                <Icon sx={iconsStyle} style={{ color: "red", fontWeight: "bold" }}>
+              <IconButton
+                size="small"
+                disableRipple
+                sx={navbarIconButton}
+                onClick={handleSignOut}
+              >
+                <Icon
+                  sx={iconsStyle}
+                  style={{ color: "red", fontWeight: "bold" }}
+                >
                   logout
                 </Icon>
               </IconButton>
