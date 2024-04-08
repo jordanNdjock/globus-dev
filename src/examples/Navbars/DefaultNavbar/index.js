@@ -92,7 +92,7 @@ function DefaultNavbar({ transparent, light, action }) {
         alignItems="center"
         position="absolute"
         left={0}
-        zIndex={3}
+        zIndex={9}
         sx={({
           palette: { transparent: transparentColor, white, background },
           functions: { rgba },

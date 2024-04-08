@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, onSnapshot } from "firebase/firestore";
 import { db } from "../../firebase";
 // @mui material components
 import Grid from "@mui/material/Grid";
@@ -15,28 +15,25 @@ import ComplexStatisticsCard from "examples/Cards/StatisticsCards/ComplexStatist
 
 function Dashboard() {
   useEffect(() => {
-    const fetchProductCount = async () => {
-      try {
-        const productQuerySnapshot = await getDocs(collection(db, "products"));
-        setProductCount(productQuerySnapshot.size);
-      } catch (error) {
-        console.error("Error fetching product count:", error);
+    const unsubscribeProduct = onSnapshot(
+      collection(db, "products"),
+      (snapshot) => {
+        setProductCount(snapshot.size);
       }
-    };
+    );
 
-    const fetchCategoryCount = async () => {
-      try {
-        const categoryQuerySnapshot = await getDocs(
-          collection(db, "categories")
-        );
-        setCategoryCount(categoryQuerySnapshot.size);
-      } catch (error) {
-        console.error("Error fetching category count:", error);
+    const unsubscribeCategory = onSnapshot(
+      collection(db, "categories"),
+      (snapshot) => {
+        setCategoryCount(snapshot.size);
       }
-    };
+    );
 
-    fetchProductCount();
-    fetchCategoryCount();
+    return () => {
+      // Unsubscribe from the snapshot listeners when the component unmounts
+      unsubscribeProduct();
+      unsubscribeCategory();
+    };
   }, []);
 
   const [productCount, setProductCount] = useState(0);
@@ -53,7 +50,7 @@ function Dashboard() {
                 color="dark"
                 icon="table_view"
                 title="Categorie"
-                count={productCount.toString()}
+                count={categoryCount.toString()}
               />
             </MDBox>
           </Grid>
@@ -62,7 +59,7 @@ function Dashboard() {
               <ComplexStatisticsCard
                 icon="receipt_long"
                 title="Produit"
-                count={categoryCount.toString()}
+                count={productCount.toString()}
               />
             </MDBox>
           </Grid>

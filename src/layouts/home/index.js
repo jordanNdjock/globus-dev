@@ -17,8 +17,8 @@ export default function Home() {
       <DefaultNavbar />
       <MDBox mt={5} mb={5} px={4}>
         <Grid container spacing={3}>
-          <Grid item xs={12} lg={12}>
-            <Grid container spacing={3} mt={5}>
+          <Grid item xs={12}>
+            <Grid container mt={5}>
               <Grid item xs={12}>
                 <BillingInformation />
               </Grid>

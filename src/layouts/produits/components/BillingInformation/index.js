@@ -85,7 +85,7 @@ function ProductInformation() {
                 <MDBox mr={2}>
                   <MDButton
                     variant="contained"
-                    color="primary"
+                    color="info"
                     disabled={currentPage === 1}
                     onClick={handlePreviousPage}
                   >
@@ -95,7 +95,7 @@ function ProductInformation() {
                 <MDBox>
                   <MDButton
                     variant="contained"
-                    color="primary"
+                    color="info"
                     disabled={currentPage === totalPages}
                     onClick={handleNextPage}
                   >
