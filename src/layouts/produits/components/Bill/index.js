@@ -25,6 +25,7 @@ import {
   uploadString,
   getDownloadURL,
   getStorage,
+  deleteObject,
 } from "firebase/storage";
 import { db } from "../../../../firebase";
 import ModifyProductModal from "layouts/produits/modal/ModifyProductModal";
@@ -191,13 +192,25 @@ function Bill({
 
         if (!productQuerySnapshot.empty) {
           const productId = productQuerySnapshot.docs[0].id;
+
+          // Delete the document from Firestore
           await deleteDoc(doc(db, "products", productId));
+          console.log("Product document deleted successfully");
+
+          // Get the image URL from the product document if necessary
+          const imageUrl = productQuerySnapshot.docs[0].data().imageUrl;
+
+          // Delete the corresponding image file from Firebase Storage
+          const storage = getStorage();
+          const imageRef = ref(storage, imageUrl);
+          await deleteObject(imageRef);
+          console.log("Image file deleted successfully");
+
           Swal.fire(
             "Supprimé !",
             "Le produit a été supprimé avec succès.",
             "success"
           );
-          console.log("produit supprimé avec succès");
         } else {
           console.log("Product not found:", productName);
         }

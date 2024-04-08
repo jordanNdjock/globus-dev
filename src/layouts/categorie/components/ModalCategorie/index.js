@@ -33,7 +33,9 @@ function ModalCategorie({ defaultName, defaultDescription, action }) {
 
   return (
     <div>
-      <Button onClick={handleOpen}>Nouvelle Categorie</Button>
+      <Button onClick={handleOpen} color="white">
+        Ajouter une Categorie
+      </Button>
       <Modal
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
@@ -74,13 +76,14 @@ function ModalCategorie({ defaultName, defaultDescription, action }) {
             />
             <Button
               variant="contained"
+              color="white"
               onClick={() => {
                 action(name, description);
                 handleClose();
               }}
               sx={{ mt: 2 }}
             >
-              Soumettre
+              Ajouter
             </Button>
           </Box>
         </Fade>

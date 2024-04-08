@@ -6,6 +6,7 @@ import MDBox from "components/MDBox";
 // Material Dashboard 2 React examples
 import Footer from "examples/Footer";
 import PageLayout from "examples/LayoutContainers/PageLayout";
+import DefaultNavbar from "examples/Navbars/DefaultNavbar";
 
 // Billing page components
 import BillingInformation from "layouts/home/components/BillingInformation";
@@ -13,10 +14,11 @@ import BillingInformation from "layouts/home/components/BillingInformation";
 export default function Home() {
   return (
     <PageLayout>
-      <MDBox mt={0} mb={3} px={4}>
+      <DefaultNavbar />
+      <MDBox mt={5} mb={5} px={4}>
         <Grid container spacing={3}>
           <Grid item xs={12} lg={12}>
-            <Grid container spacing={3}>
+            <Grid container spacing={3} mt={5}>
               <Grid item xs={12}>
                 <BillingInformation />
               </Grid>
