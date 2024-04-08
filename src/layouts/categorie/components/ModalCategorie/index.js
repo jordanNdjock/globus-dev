@@ -21,31 +21,15 @@ const style = {
   p: 4,
 };
 
-function ModalCategorie({ defaultName, defaultDescription }) {
+function ModalCategorie({ defaultName, defaultDescription, action }) {
   const [open, setOpen] = React.useState(false);
   const [name, setName] = React.useState(defaultName || "");
-  const [description, setDescription] = React.useState(defaultDescription || "");
+  const [description, setDescription] = React.useState(
+    defaultDescription || ""
+  );
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-
-  const handleSubmit = () => {
-    // Vérifier si les champs sont vides
-    if (name.trim() === "" || description.trim() === "") {
-      console.log("Veuillez remplir tous les champs.");
-      return;
-    }
-
-    // Appeler la fonction addCategory de Firebase
-    addCategory(name, description)
-      .then((categoryId) => {
-        console.log("Catégorie ajoutée avec succès avec l'ID:", categoryId);
-        handleClose(); // Fermer le modal après la soumission
-      })
-      .catch((error) => {
-        console.error("Une erreur s'est produite lors de l'ajout de la catégorie:", error);
-      });
-  };
 
   return (
     <div>
@@ -88,7 +72,14 @@ function ModalCategorie({ defaultName, defaultDescription }) {
               rows={4}
               sx={{ mt: 2 }}
             />
-            <Button variant="contained" onClick={handleSubmit} sx={{ mt: 2 }}>
+            <Button
+              variant="contained"
+              onClick={() => {
+                action(name, description);
+                handleClose();
+              }}
+              sx={{ mt: 2 }}
+            >
               Soumettre
             </Button>
           </Box>
@@ -100,8 +91,9 @@ function ModalCategorie({ defaultName, defaultDescription }) {
 
 // Typechecking props for the Item
 ModalCategorie.propTypes = {
-  defaultName: PropTypes.string,
-  defaultDescription: PropTypes.string,
+  defaultName: PropTypes.string.isRequired,
+  defaultDescription: PropTypes.string.isRequired,
+  action: PropTypes.string.isRequired,
 };
 
 export default ModalCategorie;
