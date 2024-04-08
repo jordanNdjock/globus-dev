@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
-import Product from "layouts/produits/components/Bill";
+import Product from "layouts/home/components/Bill";
 import CircularProgress from "@mui/material/CircularProgress";
 import MDButton from "@mui/material/Button";
 import { collection, onSnapshot } from "firebase/firestore";
@@ -85,7 +85,7 @@ function ProductInformation() {
                 <MDBox mr={2}>
                   <MDButton
                     variant="contained"
-                    color="info"
+                    color="primary"
                     disabled={currentPage === 1}
                     onClick={handlePreviousPage}
                   >
@@ -95,7 +95,7 @@ function ProductInformation() {
                 <MDBox>
                   <MDButton
                     variant="contained"
-                    color="info"
+                    color="primary"
                     disabled={currentPage === totalPages}
                     onClick={handleNextPage}
                   >

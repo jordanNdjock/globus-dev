@@ -11,6 +11,9 @@ import { useMaterialUIController, setMiniSidenav } from "context";
 import brandWhite from "assets/images/logo-ct.png";
 import brandDark from "assets/images/logo-ct-dark.png";
 import SignIn from "layouts/authentication/sign-in";
+import ProductDetails from "layouts/produits/ProductDetails";
+import Produit from "layouts/produits";
+import Home from "layouts/home";
 
 function App() {
   const [controller, dispatch] = useMaterialUIController();
@@ -60,7 +63,11 @@ function App() {
       {layout === "dashboard" && (
         <Sidenav
           color={sidenavColor}
-          brand={(transparentSidenav && !darkMode) || whiteSidenav ? brandDark : brandWhite}
+          brand={
+            (transparentSidenav && !darkMode) || whiteSidenav
+              ? brandDark
+              : brandWhite
+          }
           brandName="Globus"
           routes={routes}
           onMouseEnter={handleOnMouseEnter}
@@ -73,11 +80,20 @@ function App() {
           <Route
             key={route.key}
             path={route.route}
-            element={isAuthenticated() ? route.component : <Navigate to="/login" replace />}
+            element={
+              isAuthenticated() ? (
+                route.component
+              ) : (
+                <Navigate to="/login" replace />
+              )
+            }
           />
         ))}
         <Route path="/login" element={<SignIn />} />
-        <Route path="*" element={<Navigate to="/login" />} />
+        <Route path="/" element={<Home />} />
+        <Route path="/produits/:productName" element={<ProductDetails />} />
+        <Route path="/produits" element={<Produit />} />
+        <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </ThemeProvider>
   );

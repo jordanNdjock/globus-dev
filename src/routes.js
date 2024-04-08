@@ -2,8 +2,6 @@
 import Dashboard from "layouts/dashboard";
 import Categorie from "layouts/categorie";
 import Produit from "layouts/produits";
-import Stock from "layouts/stock";
-import SignIn from "layouts/authentication/sign-in";
 // @mui icons
 import Icon from "@mui/material/Icon";
 
@@ -27,18 +25,10 @@ const routes = [
   {
     type: "collapse",
     name: "Produits",
-    key: "product",
+    key: "produits",
     icon: <Icon fontSize="small">receipt_long</Icon>,
     route: "/produits",
     component: <Produit />,
-  },
-  {
-    type: "collapse",
-    name: "Stock",
-    key: "stock",
-    icon: <Icon fontSize="small">store</Icon>,
-    route: "/stock",
-    component: <Stock />,
   },
 ];
 
