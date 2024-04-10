@@ -1,18 +1,3 @@
-/**
-=========================================================
-* Material Dashboard 2 React - v2.2.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/material-dashboard-react
-* Copyright 2023 Creative Tim (https://www.creative-tim.com)
-
-Coded by www.creative-tim.com
-
- =========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
-
 // prop-types is a library for typechecking of props.
 import PropTypes from "prop-types";
 
@@ -24,6 +9,7 @@ import MDBox from "components/MDBox";
 
 // Material Dashboard 2 React example components
 import DefaultNavbarLink from "examples/Navbars/DefaultNavbar/DefaultNavbarLink";
+import { Link } from "react-router-dom";
 
 function DefaultNavbarMobile({ open, close }) {
   const { width } = open && open.getBoundingClientRect();
@@ -45,11 +31,9 @@ function DefaultNavbarMobile({ open, close }) {
       MenuListProps={{ style: { width: `calc(${width}px - 4rem)` } }}
     >
       <MDBox px={0.5}>
-        <DefaultNavbarLink
-          icon="key"
-          name="Se connecter"
-          route="/authentication/sign-in"
-        />
+        <Link to="/login">
+          <DefaultNavbarLink icon="key" name="Se connecter" route="/login" />
+        </Link>
       </MDBox>
     </Menu>
   );
@@ -58,8 +42,7 @@ function DefaultNavbarMobile({ open, close }) {
 // Typechecking props for the DefaultNavbarMenu
 DefaultNavbarMobile.propTypes = {
   open: PropTypes.oneOfType([PropTypes.bool, PropTypes.object]).isRequired,
-  close: PropTypes.oneOfType([PropTypes.func, PropTypes.bool, PropTypes.object])
-    .isRequired,
+  close: PropTypes.oneOfType([PropTypes.func, PropTypes.bool, PropTypes.object]).isRequired,
 };
 
 export default DefaultNavbarMobile;
