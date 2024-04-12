@@ -8,7 +8,7 @@ import IconButton from "@mui/material/IconButton";
 import PhotoCamera from "@mui/icons-material/PhotoCamera";
 import DeleteIcon from "@mui/icons-material/Delete";
 import MenuItem from "@mui/material/MenuItem";
-import { fetchCategories } from "../firebase_functions/fetchCategories";
+import { getAllCategories } from "../../../service/Categorie";
 
 // eslint-disable-next-line react/prop-types
 function AddProductModal({ open, handleClose, handleSubmit }) {
@@ -25,7 +25,7 @@ function AddProductModal({ open, handleClose, handleSubmit }) {
 
   useEffect(() => {
     const fetchCategoriesData = async () => {
-      const categoriesData = await fetchCategories();
+      const categoriesData = await getAllCategories();
       setCategories(categoriesData);
     };
     fetchCategoriesData();
@@ -139,11 +139,7 @@ function AddProductModal({ open, handleClose, handleSubmit }) {
             style={{ display: "none" }}
           />
           <label htmlFor="image-upload">
-            <IconButton
-              color="primary"
-              aria-label="upload picture"
-              component="span"
-            >
+            <IconButton color="primary" aria-label="upload picture" component="span">
               <PhotoCamera />
             </IconButton>
           </label>

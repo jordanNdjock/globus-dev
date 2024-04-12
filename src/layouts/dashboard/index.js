@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { collection, onSnapshot } from "firebase/firestore";
-import { db } from "../../firebase";
+import { db } from "../../backend_config";
 // @mui material components
 import Grid from "@mui/material/Grid";
 
@@ -15,19 +15,13 @@ import ComplexStatisticsCard from "examples/Cards/StatisticsCards/ComplexStatist
 
 function Dashboard() {
   useEffect(() => {
-    const unsubscribeProduct = onSnapshot(
-      collection(db, "products"),
-      (snapshot) => {
-        setProductCount(snapshot.size);
-      }
-    );
+    const unsubscribeProduct = onSnapshot(collection(db, "products"), (snapshot) => {
+      setProductCount(snapshot.size);
+    });
 
-    const unsubscribeCategory = onSnapshot(
-      collection(db, "categories"),
-      (snapshot) => {
-        setCategoryCount(snapshot.size);
-      }
-    );
+    const unsubscribeCategory = onSnapshot(collection(db, "categories"), (snapshot) => {
+      setCategoryCount(snapshot.size);
+    });
 
     return () => {
       // Unsubscribe from the snapshot listeners when the component unmounts

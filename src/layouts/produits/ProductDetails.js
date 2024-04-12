@@ -1,7 +1,7 @@
 import { useParams, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getDocs, query, collection, where } from "firebase/firestore";
-import { db } from "../../firebase"; // Assurez-vous d'importer votre instance Firebase
+import { db } from "../../backend_config"; // Assurez-vous d'importer votre instance Firebase
 import { Card, CircularProgress } from "@mui/material";
 import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
@@ -21,10 +21,7 @@ const ProductDetails = () => {
       try {
         // Récupère les données du produit depuis Firestore en utilisant son nom
         const productQuerySnapshot = await getDocs(
-          query(
-            collection(db, "products"),
-            where("productName", "==", productName)
-          )
+          query(collection(db, "products"), where("productName", "==", productName))
         );
         if (!productQuerySnapshot.empty) {
           // Le produit existe, nous prenons le premier document trouvé
@@ -85,20 +82,11 @@ const ProductDetails = () => {
           bgcolor="black"
           width="100%"
         >
-          <img
-            src={product.imageUrl}
-            alt="Product"
-            style={{ maxWidth: "100%", height: "auto" }}
-          />
+          <img src={product.imageUrl} alt="Product" style={{ maxWidth: "100%", height: "auto" }} />
         </MDBox>
 
         <MDBox width="100%" p={2} ml={{ xs: 0, sm: 2 }}>
-          <MDTypography
-            variant="h3"
-            fontWeight="medium"
-            textTransform="capitalize"
-            mb={1}
-          >
+          <MDTypography variant="h3" fontWeight="medium" textTransform="capitalize" mb={1}>
             {product.productName}
           </MDTypography>
           <MDBox
@@ -117,11 +105,7 @@ const ProductDetails = () => {
               WebkitBoxOrient: "vertical",
             }}
           >
-            <MDTypography
-              variant="h6"
-              fontWeight="medium"
-              style={{ textAlign: "justify" }}
-            >
+            <MDTypography variant="h6" fontWeight="medium" style={{ textAlign: "justify" }}>
               {product.description}
             </MDTypography>
           </MDBox>
@@ -133,8 +117,7 @@ const ProductDetails = () => {
             mb={1}
           >
             <MDTypography variant="h6" fontWeight="medium">
-              <span style={{ color: "blue" }}> Prix :</span> {product.price}{" "}
-              Fcfa
+              <span style={{ color: "blue" }}> Prix :</span> {product.price} Fcfa
             </MDTypography>
           </MDBox>
           <MDBox
@@ -145,8 +128,7 @@ const ProductDetails = () => {
             mb={1}
           >
             <MDTypography variant="h6" fontWeight="medium">
-              <span style={{ color: "blue" }}>Quantité :</span>{" "}
-              {product.quantity}
+              <span style={{ color: "blue" }}>Quantité :</span> {product.quantity}
             </MDTypography>
           </MDBox>
           <MDBox
@@ -157,16 +139,10 @@ const ProductDetails = () => {
             mb={1}
           >
             <MDTypography variant="h6" fontWeight="medium">
-              <span style={{ color: "blue" }}>Catégorie :</span>{" "}
-              {product.category}
+              <span style={{ color: "blue" }}>Catégorie :</span> {product.category}
             </MDTypography>
           </MDBox>
-          <MDButton
-            variant="contained"
-            color="info"
-            component={Link}
-            to="/produits"
-          >
+          <MDButton variant="contained" color="info" component={Link} to="/produits">
             <ArrowBackIcon /> &nbsp;Retour
           </MDButton>
         </MDBox>

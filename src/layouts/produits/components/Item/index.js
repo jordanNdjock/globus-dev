@@ -11,35 +11,13 @@ import IconButton from "@mui/material/IconButton";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { Card, Snackbar, SnackbarContent } from "@mui/material";
 import Swal from "sweetalert2";
-import {
-  deleteDoc,
-  doc,
-  query,
-  where,
-  getDocs,
-  collection,
-  updateDoc,
-} from "firebase/firestore";
-import {
-  ref,
-  uploadString,
-  getDownloadURL,
-  getStorage,
-  deleteObject,
-} from "firebase/storage";
-import { db } from "../../../../firebase";
+import { deleteDoc, doc, query, where, getDocs, collection, updateDoc } from "firebase/firestore";
+import { ref, uploadString, getDownloadURL, getStorage, deleteObject } from "firebase/storage";
+import { db } from "../../../../backend_config";
 import ModifyProductModal from "layouts/produits/modal/ModifyProductModal";
 import { Link } from "react-router-dom";
 
-function Bill({
-  id,
-  productName,
-  description,
-  price,
-  quantity,
-  imageUrl,
-  category,
-}) {
+function Item({ id, productName, description, price, quantity, imageUrl, category }) {
   const [successAlertOpen, setSuccessAlertOpen] = useState(false);
   const [openModal, setOpenModal] = useState(false);
   const [productToModify, setProductToModify] = useState(null);
@@ -62,10 +40,7 @@ function Bill({
       try {
         // Mettre à jour la quantité dans Firebase
         const productQuerySnapshot = await getDocs(
-          query(
-            collection(db, "products"),
-            where("productName", "==", productName)
-          )
+          query(collection(db, "products"), where("productName", "==", productName))
         );
         if (!productQuerySnapshot.empty) {
           const productId = productQuerySnapshot.docs[0].id;
@@ -206,11 +181,7 @@ function Bill({
           await deleteObject(imageRef);
           console.log("Image file deleted successfully");
 
-          Swal.fire(
-            "Supprimé !",
-            "Le produit a été supprimé avec succès.",
-            "success"
-          );
+          Swal.fire("Supprimé !", "Le produit a été supprimé avec succès.", "success");
         } else {
           console.log("Product not found:", productName);
         }
@@ -249,25 +220,11 @@ function Bill({
           bgcolor="black"
           width="100%"
         >
-          <img
-            src={imageUrl}
-            alt="Product"
-            style={{ maxWidth: "100%", height: "300px" }}
-          />
+          <img src={imageUrl} alt="Product" style={{ maxWidth: "100%", height: "300px" }} />
         </MDBox>
 
-        <MDBox
-          width="100%"
-          p={2}
-          ml={{ xs: 0, sm: 2 }}
-          style={{ textAlign: "center" }}
-        >
-          <MDTypography
-            variant="h3"
-            fontWeight="medium"
-            textTransform="capitalize"
-            mb={1}
-          >
+        <MDBox width="100%" p={2} ml={{ xs: 0, sm: 2 }} style={{ textAlign: "center" }}>
+          <MDTypography variant="h3" fontWeight="medium" textTransform="capitalize" mb={1}>
             {productName}
           </MDTypography>
           <MDBox
@@ -283,20 +240,13 @@ function Bill({
             </MDTypography>
           </MDBox>
           <ButtonGroup size="small" variant="outlined" aria-label="quantity">
-            <MDButton
-              onClick={handleDecrease}
-              variant="contained"
-              size="small"
-              color="error"
-            >
+            <MDButton onClick={handleDecrease} variant="contained" size="small" color="error">
               -
             </MDButton>
             <input
               type="text"
               value={productQuantity}
-              onChange={(event) =>
-                handleChangeQuantity(productName, event.target.value)
-              }
+              onChange={(event) => handleChangeQuantity(productName, event.target.value)}
               style={{
                 width: "50px",
                 textAlign: "center",
@@ -309,12 +259,7 @@ function Bill({
                 outline: "none",
               }}
             />
-            <MDButton
-              onClick={handleIncrease}
-              variant="contained"
-              size="small"
-              color="success"
-            >
+            <MDButton onClick={handleIncrease} variant="contained" size="small" color="success">
               +
             </MDButton>
           </ButtonGroup>
@@ -378,11 +323,7 @@ function Bill({
           <IconButton onClick={handleMenuOpen}>
             <MoreVertIcon />
           </IconButton>
-          <Menu
-            anchorEl={anchorEl}
-            open={Boolean(anchorEl)}
-            onClose={handleMenuClose}
-          >
+          <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleMenuClose}>
             <MenuItem onClick={handleDelete}>
               Supprimer &nbsp;<Icon color="error">delete</Icon>
             </MenuItem>
@@ -415,17 +356,14 @@ function Bill({
         color="success"
         anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
       >
-        <SnackbarContent
-          sx={{ backgroundColor: "#4CAF50" }}
-          message={snackbarMessage}
-        />
+        <SnackbarContent sx={{ backgroundColor: "#4CAF50" }} message={snackbarMessage} />
       </Snackbar>
     </>
   );
 }
 
 // Prop types validation
-Bill.propTypes = {
+Item.propTypes = {
   id: PropTypes.string.isRequired,
   productName: PropTypes.string.isRequired,
   description: PropTypes.string.isRequired,
@@ -435,4 +373,4 @@ Bill.propTypes = {
   category: PropTypes.string.isRequired,
 };
 
-export default Bill;
+export default Item;

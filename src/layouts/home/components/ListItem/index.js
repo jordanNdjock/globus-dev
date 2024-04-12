@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
 import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
-import Product from "layouts/produits/components/Bill";
+import Item from "layouts/home/components/Item";
 import CircularProgress from "@mui/material/CircularProgress";
 import MDButton from "@mui/material/Button";
 import { collection, onSnapshot } from "firebase/firestore";
-import { db } from "../../../../firebase";
+import { db } from "../../../../backend_config";
 
-function ProductInformation() {
+function ListItem() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
@@ -61,7 +61,7 @@ function ProductInformation() {
           <>
             <MDBox component="ul" display="flex" flexDirection="column" p={0} m={0}>
               {currentProducts.map((product) => (
-                <Product key={product.id} {...product} />
+                <Item key={product.id} {...product} />
               ))}
             </MDBox>
             {totalPages > 1 && products.length > 5 && (
@@ -69,7 +69,7 @@ function ProductInformation() {
                 <MDBox mr={2}>
                   <MDButton
                     variant="contained"
-                    color="info"
+                    color="primary"
                     disabled={currentPage === 1}
                     onClick={handlePreviousPage}
                   >
@@ -79,7 +79,7 @@ function ProductInformation() {
                 <MDBox>
                   <MDButton
                     variant="contained"
-                    color="info"
+                    color="primary"
                     disabled={currentPage === totalPages}
                     onClick={handleNextPage}
                   >
@@ -95,4 +95,4 @@ function ProductInformation() {
   );
 }
 
-export default ProductInformation;
+export default ListItem;

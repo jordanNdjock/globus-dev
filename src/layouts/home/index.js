@@ -9,7 +9,7 @@ import PageLayout from "examples/LayoutContainers/PageLayout";
 import DefaultNavbar from "examples/Navbars/DefaultNavbar";
 
 // Billing page components
-import BillingInformation from "layouts/home/components/BillingInformation";
+import ListItem from "./components/ListItem";
 
 export default function Home() {
   return (
@@ -20,7 +20,7 @@ export default function Home() {
           <Grid item xs={12}>
             <Grid container mt={5}>
               <Grid item xs={12}>
-                <BillingInformation />
+                <ListItem />
               </Grid>
             </Grid>
           </Grid>

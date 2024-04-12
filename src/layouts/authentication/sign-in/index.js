@@ -9,7 +9,7 @@ import bgImage from "assets/images/bg-sign-in-basic.jpeg";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../../../firebase";
+import { auth } from "../../../backend_config";
 
 function Basic() {
   const navigate = useNavigate();

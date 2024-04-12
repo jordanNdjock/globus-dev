@@ -4,15 +4,7 @@ import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
 import { Card, Snackbar, SnackbarContent } from "@mui/material";
 
-function Bill({
-  id,
-  productName,
-  description,
-  price,
-  quantity,
-  imageUrl,
-  category,
-}) {
+function Item({ id, productName, description, price, quantity, imageUrl, category }) {
   const [successAlertOpen, setSuccessAlertOpen] = useState(false);
   const [productQuantity, setProductQuantity] = useState(parseInt(quantity));
   const [snackbarMessage, setSnackbarMessage] = useState("");
@@ -49,19 +41,10 @@ function Bill({
           bgcolor="black"
           width="100%"
         >
-          <img
-            src={imageUrl}
-            alt="Product"
-            style={{ maxWidth: "100%", height: "400px" }}
-          />
+          <img src={imageUrl} alt="Product" style={{ maxWidth: "100%", height: "400px" }} />
         </MDBox>
 
-        <MDBox
-          width="100%"
-          p={2}
-          ml={{ xs: 0, sm: 2 }}
-          style={{ textAlign: "center" }}
-        >
+        <MDBox width="100%" p={2} ml={{ xs: 0, sm: 2 }} style={{ textAlign: "center" }}>
           <MDTypography variant="h2" color="primary" gutterBottom>
             {productName}
           </MDTypography>
@@ -86,17 +69,14 @@ function Bill({
         color="success"
         anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
       >
-        <SnackbarContent
-          sx={{ backgroundColor: "#4CAF50" }}
-          message={snackbarMessage}
-        />
+        <SnackbarContent sx={{ backgroundColor: "#4CAF50" }} message={snackbarMessage} />
       </Snackbar>
     </>
   );
 }
 
 // Prop types validation
-Bill.propTypes = {
+Item.propTypes = {
   id: PropTypes.string.isRequired,
   productName: PropTypes.string.isRequired,
   description: PropTypes.string.isRequired,
@@ -106,4 +86,4 @@ Bill.propTypes = {
   category: PropTypes.string.isRequired,
 };
 
-export default Bill;
+export default Item;

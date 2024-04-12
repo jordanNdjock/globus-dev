@@ -11,7 +11,7 @@ import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
 import { signOut } from "firebase/auth";
-import { auth } from "../../../firebase";
+import { auth } from "../../../backend_config";
 import Icon from "@mui/material/Icon";
 import { useNavigate } from "react-router-dom";
 import MenuIcon from "@mui/icons-material/Menu";
@@ -31,11 +31,7 @@ import {
 } from "examples/Navbars/DashboardNavbar/styles";
 
 // Material Dashboard 2 React context
-import {
-  useMaterialUIController,
-  setTransparentNavbar,
-  setMiniSidenav,
-} from "context";
+import { useMaterialUIController, setTransparentNavbar, setMiniSidenav } from "context";
 
 function DashboardNavbar({ absolute, light, isMini }) {
   const [userName, setUserName] = useState(localStorage.getItem("name") || "");
@@ -55,10 +51,7 @@ function DashboardNavbar({ absolute, light, isMini }) {
 
     // A function that sets the transparent state of the navbar.
     function handleTransparentNavbar() {
-      setTransparentNavbar(
-        dispatch,
-        (fixedNavbar && window.scrollY === 0) || !fixedNavbar
-      );
+      setTransparentNavbar(dispatch, (fixedNavbar && window.scrollY === 0) || !fixedNavbar);
     }
 
     /** 
@@ -94,11 +87,7 @@ function DashboardNavbar({ absolute, light, isMini }) {
         })
         .catch((error) => {
           console.log("Erreur de deconnexion !");
-          Swal.fire(
-            "Erreur !",
-            "Une erreur s'est produite lors de la deconnexion.",
-            "error"
-          );
+          Swal.fire("Erreur !", "Une erreur s'est produite lors de la deconnexion.", "error");
         });
     }
   }
@@ -106,10 +95,7 @@ function DashboardNavbar({ absolute, light, isMini }) {
   const handleMiniSidenav = () => setMiniSidenav(dispatch, !miniSidenav);
 
   // Styles for the navbar icons
-  const iconsStyle = ({
-    palette: { dark, white, text },
-    functions: { rgba },
-  }) => ({
+  const iconsStyle = ({ palette: { dark, white, text }, functions: { rgba } }) => ({
     color: () => {
       let colorValue = light || darkMode ? white.main : dark.main;
 
@@ -125,9 +111,7 @@ function DashboardNavbar({ absolute, light, isMini }) {
     <AppBar
       position={absolute ? "absolute" : navbarType}
       color="inherit"
-      sx={(theme) =>
-        navbar(theme, { transparentNavbar, absolute, light, darkMode })
-      }
+      sx={(theme) => navbar(theme, { transparentNavbar, absolute, light, darkMode })}
     >
       <Toolbar sx={(theme) => navbarContainer(theme)}>
         <MDBox
@@ -136,12 +120,7 @@ function DashboardNavbar({ absolute, light, isMini }) {
           sx={(theme) => navbarRow(theme, { isMini })}
           display={{ xs: "none", sm: "block" }}
         >
-          <Breadcrumbs
-            icon="home"
-            title={route[route.length - 1]}
-            route={route}
-            light={light}
-          />
+          <Breadcrumbs icon="home" title={route[route.length - 1]} route={route} light={light} />
         </MDBox>
         {isMini ? null : (
           <MDBox sx={(theme) => navbarRow(theme, { isMini })}>
@@ -153,16 +132,10 @@ function DashboardNavbar({ absolute, light, isMini }) {
                   disableRipple
                   style={{ marginTop: "-2px" }}
                 >
-                  <Icon
-                    sx={iconsStyle}
-                    className="text-primary"
-                    style={{ fontWeight: "bold" }}
-                  >
+                  <Icon sx={iconsStyle} className="text-primary" style={{ fontWeight: "bold" }}>
                     account_circle
                   </Icon>
-                  <span style={{ marginLeft: "5px" }}>
-                    {userName.substring(0, 6)}
-                  </span>
+                  <span style={{ marginLeft: "5px" }}>{userName.substring(0, 6)}</span>
                 </IconButton>
               </Link>
 
@@ -183,10 +156,7 @@ function DashboardNavbar({ absolute, light, isMini }) {
                 onClick={handleSignOut}
                 style={{ float: "right" }}
               >
-                <Icon
-                  sx={iconsStyle}
-                  style={{ color: "crimson", fontWeight: "bold" }}
-                >
+                <Icon sx={iconsStyle} style={{ color: "crimson", fontWeight: "bold" }}>
                   logout
                 </Icon>
               </IconButton>
