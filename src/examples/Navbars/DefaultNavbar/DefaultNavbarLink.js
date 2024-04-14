@@ -1,18 +1,3 @@
-/**
-=========================================================
-* Material Dashboard 2 React - v2.2.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/material-dashboard-react
-* Copyright 2023 Creative Tim (https://www.creative-tim.com)
-
-Coded by www.creative-tim.com
-
- =========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
-
 // prop-types is a library for typechecking of props
 import PropTypes from "prop-types";
 
@@ -26,7 +11,7 @@ import Icon from "@mui/material/Icon";
 import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
 
-function DefaultNavbarLink({ icon, name, route, light }) {
+function DefaultNavbarLink({ icon, name, route }) {
   return (
     <MDBox
       component={Link}
@@ -39,7 +24,7 @@ function DefaultNavbarLink({ icon, name, route, light }) {
     >
       <Icon
         sx={{
-          color: ({ palette: { white, secondary } }) => (light ? white.main : secondary.main),
+          color: ({ palette: { white, secondary } }) => (secondary.main),
           verticalAlign: "middle",
         }}
       >
@@ -48,7 +33,7 @@ function DefaultNavbarLink({ icon, name, route, light }) {
       <MDTypography
         variant="button"
         fontWeight="regular"
-        color={light ? "white" : "dark"}
+        color={"dark"}
         textTransform="capitalize"
         sx={{ width: "100%", lineHeight: 0 }}
       >
@@ -63,7 +48,6 @@ DefaultNavbarLink.propTypes = {
   icon: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
   route: PropTypes.string.isRequired,
-  light: PropTypes.bool.isRequired,
 };
 
 export default DefaultNavbarLink;

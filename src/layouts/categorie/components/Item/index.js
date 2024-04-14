@@ -133,7 +133,7 @@ function Item({ id, name, description, noGutter, onDelete }) {
         <Fade in={open}>
           <Box sx={style}>
             <Typography id="transition-modal-title" variant="h6" component="h2">
-              Ajouter une nouvelle catégorie
+              Modifier une catégorie
             </Typography>
             <TextField
               id="name"
@@ -157,13 +157,14 @@ function Item({ id, name, description, noGutter, onDelete }) {
             />
             <Button
               variant="contained"
+              color="info"
               onClick={() => {
                 handleUpdateCategory(id, nameUpdate, descriptionUpdate);
                 handleClose();
               }}
-              sx={{ mt: 2 }}
+              sx={{ mt: 2, backgroundColor: "blue" }}
             >
-              Modifier
+                  Modifier
             </Button>
           </Box>
         </Fade>

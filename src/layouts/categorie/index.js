@@ -128,7 +128,7 @@ export default function Categorie() {
                   height: "100%",
                 }}
               >
-                <CircularProgress />
+                <CircularProgress color="info" />
               </Box>
             ) : (
               categories.map((category) => (

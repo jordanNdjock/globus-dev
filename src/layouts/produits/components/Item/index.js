@@ -11,13 +11,14 @@ import IconButton from "@mui/material/IconButton";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { Card, Snackbar, SnackbarContent } from "@mui/material";
 import Swal from "sweetalert2";
-import { deleteDoc, doc, query, where, getDocs, collection, updateDoc } from "firebase/firestore";
-import { ref, uploadString, getDownloadURL, getStorage, deleteObject } from "firebase/storage";
+import { doc, query, where, getDocs, collection, updateDoc } from "firebase/firestore";
 import { db } from "../../../../backend_config";
 import ModifyProductModal from "layouts/produits/modal/ModifyProductModal";
 import { Link } from "react-router-dom";
+import { deleteProduct } from "service/Produit";
+import { updateProduct } from "service/Produit";
 
-function Item({ id, productName, description, price, quantity, imageUrl, category }) {
+function Item({ id, productName, description, price, quantity, imageUrl, id_category, audio, created }) {
   const [successAlertOpen, setSuccessAlertOpen] = useState(false);
   const [openModal, setOpenModal] = useState(false);
   const [productToModify, setProductToModify] = useState(null);
@@ -84,68 +85,18 @@ function Item({ id, productName, description, price, quantity, imageUrl, categor
   //modification du produit
   const handleSubmit = async (editedProduct) => {
     try {
-      let storage = getStorage();
-      // Effectuer une requête pour trouver le document correspondant au nom du produit
-      const productQuery = query(
-        collection(db, "products"),
-        where("productName", "==", editedProduct.productName)
-      );
-      const productQuerySnapshot = await getDocs(productQuery);
-
-      // Vérifier si le produit a été trouvé
-      if (!productQuerySnapshot.empty) {
-        const productId = productQuerySnapshot.docs[0].id;
-        const productData = productQuerySnapshot.docs[0].data();
-        const currentImageUrl = productData.imageUrl;
-
-        // Vérifier si l'URL de l'image a changé
-        if (editedProduct.imageUrl !== currentImageUrl) {
-          // Si l'URL de l'image a changé, télécharger et mettre à jour l'image dans le stockage
-          const imageRef = ref(storage, `images/${editedProduct.productName}`);
-          await uploadString(imageRef, editedProduct.imageUrl, "data_url");
-          const imageUrlToUpdate = await getDownloadURL(imageRef);
-
-          // Mettre à jour le document correspondant avec les nouvelles données
-          const productDocRef = doc(db, "products", productId);
-          await updateDoc(productDocRef, {
-            productName: editedProduct.productName,
-            description: editedProduct.description,
-            price: editedProduct.price,
-            quantity: editedProduct.quantity,
-            category: editedProduct.category,
-            imageUrl: imageUrlToUpdate,
-          });
-
-          console.log("Product updated successfully!");
+          await updateProduct(editedProduct);
           setOpenModal(false);
           setSnackbarMessage("Le produit a été modifié avec succès !");
           setSuccessAlertOpen(true);
-        } else {
-          // Si l'URL de l'image n'a pas changé, mettre à jour le document sans télécharger l'image
-          const productDocRef = doc(db, "products", productId);
-          await updateDoc(productDocRef, {
-            productName: editedProduct.productName,
-            description: editedProduct.description,
-            price: editedProduct.price,
-            quantity: editedProduct.quantity,
-            category: editedProduct.category,
-          });
 
-          console.log("Product updated successfully!");
-          setOpenModal(false);
-          setSnackbarMessage("Le produit a été modifié avec succès !");
-          setSuccessAlertOpen(true);
-        }
-      } else {
-        console.log("Product not found:", editedProduct.productName);
-      }
     } catch (error) {
       console.error("Error updating product:", error);
     }
   };
 
   //suppression du produit
-  const handleDelete = async () => {
+  const handleDelete = async (id) => {
     const result = await Swal.fire({
       title: "Êtes-vous sûr de vouloir supprimer ce  produit ?",
       text: "Cette action est irréversible !",
@@ -159,32 +110,8 @@ function Item({ id, productName, description, price, quantity, imageUrl, categor
 
     if (result.isConfirmed) {
       try {
-        const productQuery = query(
-          collection(db, "products"),
-          where("productName", "==", productName)
-        );
-        const productQuerySnapshot = await getDocs(productQuery);
-
-        if (!productQuerySnapshot.empty) {
-          const productId = productQuerySnapshot.docs[0].id;
-
-          // Delete the document from Firestore
-          await deleteDoc(doc(db, "products", productId));
-          console.log("Product document deleted successfully");
-
-          // Get the image URL from the product document if necessary
-          const imageUrl = productQuerySnapshot.docs[0].data().imageUrl;
-
-          // Delete the corresponding image file from Firebase Storage
-          const storage = getStorage();
-          const imageRef = ref(storage, imageUrl);
-          await deleteObject(imageRef);
-          console.log("Image file deleted successfully");
-
+          await deleteProduct(id);
           Swal.fire("Supprimé !", "Le produit a été supprimé avec succès.", "success");
-        } else {
-          console.log("Product not found:", productName);
-        }
       } catch (error) {
         console.error("Error deleting product:", error);
         Swal.fire(
@@ -248,7 +175,7 @@ function Item({ id, productName, description, price, quantity, imageUrl, categor
               value={productQuantity}
               onChange={(event) => handleChangeQuantity(productName, event.target.value)}
               style={{
-                width: "50px",
+                width: "60px",
                 textAlign: "center",
                 border: "1px solid #ced4da",
                 borderRadius: "4px",
@@ -272,7 +199,7 @@ function Item({ id, productName, description, price, quantity, imageUrl, categor
               color="error"
               size="medium"
               sx={{ display: { xs: "none", sm: "flex" } }}
-              onClick={handleDelete}
+              onClick={() =>handleDelete(id)}
             >
               <Icon>delete</Icon>
             </MDButton>
@@ -285,12 +212,14 @@ function Item({ id, productName, description, price, quantity, imageUrl, categor
               sx={{ display: { xs: "none", sm: "flex" } }}
               onClick={() =>
                 handleOpenModal({
+                  id,
                   productName,
                   description,
                   price,
                   quantity,
                   imageUrl,
-                  category,
+                  id_category,
+                  audio,
                 })
               }
             >
@@ -298,7 +227,7 @@ function Item({ id, productName, description, price, quantity, imageUrl, categor
             </MDButton>
           </MDBox>
           <MDBox display="flex" alignItems="center">
-            <Link to={`/produits/${productName}`} color="dark">
+            <Link to={`/produits/${id}`} color="dark">
               <MDButton
                 variant="contained"
                 color="info"
@@ -324,24 +253,26 @@ function Item({ id, productName, description, price, quantity, imageUrl, categor
             <MoreVertIcon />
           </IconButton>
           <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleMenuClose}>
-            <MenuItem onClick={handleDelete}>
+            <MenuItem onClick={() =>handleDelete(id)}>
               Supprimer &nbsp;<Icon color="error">delete</Icon>
             </MenuItem>
             <MenuItem
               onClick={() =>
                 handleOpenModal({
+                  id,
                   productName,
                   description,
                   price,
                   quantity,
                   imageUrl,
-                  category,
+                  id_category,
+                  audio,
                 })
               }
             >
               Modifier &nbsp;<Icon color="info">edit</Icon>
             </MenuItem>
-            <Link to={`/produits/${productName}`} color="dark">
+            <Link to={`/produits/${id}`} color="dark">
               <MenuItem>
                 Voir détails &nbsp;<Icon>visibility</Icon>
               </MenuItem>
@@ -370,7 +301,7 @@ Item.propTypes = {
   price: PropTypes.string.isRequired,
   quantity: PropTypes.string.isRequired,
   imageUrl: PropTypes.string.isRequired,
-  category: PropTypes.string.isRequired,
+  id_category: PropTypes.string.isRequired,
 };
 
 export default Item;

@@ -4,29 +4,50 @@ import MDTypography from "components/MDTypography";
 import Item from "layouts/home/components/Item";
 import CircularProgress from "@mui/material/CircularProgress";
 import MDButton from "@mui/material/Button";
-import { collection, onSnapshot } from "firebase/firestore";
+import CustomizedInputBase from "./CustomizedInputBase";
+import Grid from "@mui/material/Grid";
+import { collection, onSnapshot, orderBy, query, where } from "firebase/firestore";
 import { db } from "../../../../backend_config";
 
 function ListItem() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
-
+  const [searchQuery, setSearchQuery] = useState("");
+  
   useEffect(() => {
-    const unsubscribe = onSnapshot(collection(db, "products"), (snapshot) => {
-      const products = [];
-      snapshot.forEach((doc) => {
-        products.push({ id: doc.id, ...doc.data() });
-      });
-      setProducts(products);
-      setLoading(false);
-    });
-
+    const unsubscribe = onSnapshot(
+      query(collection(db, "products"), orderBy("created", "desc")),
+      (snapshot) => {
+        const products = [];
+        snapshot.forEach((doc) => {
+          products.push({ id: doc.id, ...doc.data() });
+        });
+        setProducts(products);
+        setLoading(false);
+      }
+    );
+  
     // Retourner la fonction de désabonnement
     return () => unsubscribe();
   }, []);
+  
+  const handleSearch = () => {
+    // Rechercher les produits correspondant à la requête de recherche
+    if (searchQuery.trim() !== "") {
+      setLoading(true);
+      const searchResults = [];
+      products.forEach((product) => {
+        if (product.category.toLowerCase().includes(searchQuery.toLowerCase())) {
+          searchResults.push(product);
+        }
+      });
+      setProducts(searchResults);
+      setLoading(false);
+    }
+  };
 
-  const productsPerPage = 5;
+  const productsPerPage = 6;
   const totalPages = Math.ceil(products.length / productsPerPage);
 
   const handleNextPage = () => {
@@ -47,11 +68,13 @@ function ListItem() {
 
   return (
     <>
-      <MDBox pt={3} px={2}>
-        <MDTypography variant="h6" fontWeight="medium">
-          Liste des produits
-        </MDTypography>
-      </MDBox>
+        <MDBox pt={3} px={2} mb={5}>
+          <MDTypography variant="h1" fontWeight="medium">
+          </MDTypography>
+        </MDBox>
+      {/* <MDBox pt={3} px={2} mb={5}>
+          <CustomizedInputBase products={products} />
+      </MDBox> */}
       <MDBox pt={1} pb={2} px={2}>
         {loading ? (
           <MDBox display="flex" justifyContent="center" alignItems="center" height="100px">
@@ -59,12 +82,27 @@ function ListItem() {
           </MDBox>
         ) : (
           <>
-            <MDBox component="ul" display="flex" flexDirection="column" p={0} m={0}>
-              {currentProducts.map((product) => (
-                <Item key={product.id} {...product} />
-              ))}
+            <MDBox
+              component="ul"
+              display="flex"
+              flexDirection="row"
+              flexWrap="wrap"
+              margin="auto"
+            >
+              {currentProducts.length === 0 ? (
+                <MDTypography variant="body1" textAlign="center">
+                  Aucun résultat trouvé pour cette catégorie.
+                </MDTypography>
+              ) : (
+                currentProducts.map((product, index) => (
+                  <Grid key={product.id} item xs={12} sm={6} md={4} lg={4} style={{ display: index > 2 ? 'block' : 'flex' }}>
+                    <Item {...product} />
+                  </Grid>
+                ))
+              )}
             </MDBox>
-            {totalPages > 1 && products.length > 5 && (
+
+            {totalPages > 1 && products.length > 6 && (
               <MDBox display="flex" justifyContent="center" alignItems="center" mt={2}>
                 <MDBox mr={2}>
                   <MDButton

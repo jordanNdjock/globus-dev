@@ -6,10 +6,8 @@ import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
 import MDButton from "components/MDButton";
 import AddProductModal from "layouts/produits/modal/AddProductModal";
-import { db } from "../../../../backend_config";
-import { collection, addDoc } from "firebase/firestore";
-import { ref, uploadString, getDownloadURL, getStorage } from "firebase/storage";
 import { Snackbar, SnackbarContent } from "@mui/material";
+import { addProduct } from "service/Produit";
 
 function Header() {
   const [openModal, setOpenModal] = useState(false);
@@ -28,33 +26,18 @@ function Header() {
   };
 
   const handleSubmit = async (formData) => {
-    try {
-      let imageUrl = "";
-      let storage = getStorage();
-
-      // Référence de la collection des produits
-      const productsRef = collection(db, "products");
-
-      // Téléverser l'image si elle est fournie
-      if (formData.image) {
-        const imageRef = ref(storage, `images/${formData.productName}`);
-        await uploadString(imageRef, formData.image, "data_url");
-        imageUrl = await getDownloadURL(imageRef);
-      }
-      // Ajouter le produit à la collection des produits
-      await addDoc(productsRef, {
-        productName: formData.productName,
-        description: formData.description,
-        price: formData.price,
-        quantity: formData.quantity,
-        imageUrl: imageUrl,
-        category: formData.category, // Si nécessaire
-      });
-      console.log("Produit ajouté avec succès !");
-      setSuccessAlertOpen(true);
-    } catch (error) {
-      console.error("Erreur lors de l'ajout du produit :", error);
-    }
+    const { productName, description, price, quantity, image, id_category, audio, created } = formData;
+    await addProduct(
+      productName,
+      description,
+      price,
+      quantity,
+      image,
+      id_category,
+      audio,
+      created
+    );
+    setSuccessAlertOpen(true);
   };
 
   return (
