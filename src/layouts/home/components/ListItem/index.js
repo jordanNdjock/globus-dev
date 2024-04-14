@@ -6,14 +6,15 @@ import CircularProgress from "@mui/material/CircularProgress";
 import MDButton from "@mui/material/Button";
 import CustomizedInputBase from "./CustomizedInputBase";
 import Grid from "@mui/material/Grid";
-import { collection, onSnapshot, orderBy, query, where } from "firebase/firestore";
+import { collection, onSnapshot, orderBy, query,} from "firebase/firestore";
 import { db } from "../../../../backend_config";
 
 function ListItem() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
-  const [searchQuery, setSearchQuery] = useState("");
+  const [filteredProducts, setFilteredProducts] = useState([]);
+
   
   useEffect(() => {
     const unsubscribe = onSnapshot(
@@ -32,21 +33,6 @@ function ListItem() {
     return () => unsubscribe();
   }, []);
   
-  const handleSearch = () => {
-    // Rechercher les produits correspondant à la requête de recherche
-    if (searchQuery.trim() !== "") {
-      setLoading(true);
-      const searchResults = [];
-      products.forEach((product) => {
-        if (product.category.toLowerCase().includes(searchQuery.toLowerCase())) {
-          searchResults.push(product);
-        }
-      });
-      setProducts(searchResults);
-      setLoading(false);
-    }
-  };
-
   const productsPerPage = 6;
   const totalPages = Math.ceil(products.length / productsPerPage);
 
@@ -61,6 +47,9 @@ function ListItem() {
       setCurrentPage(currentPage - 1);
     }
   };
+  const handleFilter = (filteredProducts) => {
+    setFilteredProducts(filteredProducts);
+  };
 
   const startIndex = (currentPage - 1) * productsPerPage;
   const endIndex = startIndex + productsPerPage;
@@ -73,7 +62,7 @@ function ListItem() {
           </MDTypography>
         </MDBox>
       {/* <MDBox pt={3} px={2} mb={5}>
-          <CustomizedInputBase products={products} />
+          <CustomizedInputBase products={products} onFilter={handleFilter} />
       </MDBox> */}
       <MDBox pt={1} pb={2} px={2}>
         {loading ? (

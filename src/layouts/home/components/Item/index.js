@@ -24,7 +24,7 @@ function Item({ id, productName, description, price, quantity, imageUrl, id_cate
             {price} FCFA
           </Typography>
           <Typography variant="h6" color="secondary" gutterBottom>
-                {quantity === "0" ? <span style={{ color: 'crimson' }}>Stock épuisée</span> : `${quantity} en stock`}
+                {quantity === "0" ? <span style={{ color: 'crimson' }}>Stock épuisé</span> : `${quantity} en stock`}
           </Typography>
           <div style={{ float: "right", fontSize: "1px" }}>
             <Typography variant="body2" color="secondary" gutterBottom>
