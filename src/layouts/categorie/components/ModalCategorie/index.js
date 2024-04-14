@@ -7,7 +7,7 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import PropTypes from "prop-types";
-import { addCategory } from "bd/Categorie";
+import { addCategory } from "service/Categorie";
 
 const style = {
   position: "absolute",
@@ -24,9 +24,7 @@ const style = {
 function ModalCategorie({ defaultName, defaultDescription, action }) {
   const [open, setOpen] = React.useState(false);
   const [name, setName] = React.useState(defaultName || "");
-  const [description, setDescription] = React.useState(
-    defaultDescription || ""
-  );
+  const [description, setDescription] = React.useState(defaultDescription || "");
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);

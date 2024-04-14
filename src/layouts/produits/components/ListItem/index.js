@@ -1,27 +1,30 @@
 import React, { useState, useEffect } from "react";
 import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
-import Product from "layouts/home/components/Bill";
+import Product from "layouts/produits/components/Item";
 import CircularProgress from "@mui/material/CircularProgress";
 import MDButton from "@mui/material/Button";
-import { collection, onSnapshot } from "firebase/firestore";
-import { db } from "../../../../firebase";
+import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
+import { db } from "../../../../backend_config";
 
-function ProductInformation() {
+function ListItem() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
-    const unsubscribe = onSnapshot(collection(db, "products"), (snapshot) => {
-      const products = [];
-      snapshot.forEach((doc) => {
-        products.push({ id: doc.id, ...doc.data() });
-      });
-      setProducts(products);
-      setLoading(false);
-    });
-
+    const unsubscribe = onSnapshot(
+      query(collection(db, "products"), orderBy("created", "desc")),
+      (snapshot) => {
+        const products = [];
+        snapshot.forEach((doc) => {
+          products.push({ id: doc.id, ...doc.data() });
+        });
+        setProducts(products);
+        setLoading(false);
+      }
+    );
+  
     // Retourner la fonction de désabonnement
     return () => unsubscribe();
   }, []);
@@ -46,46 +49,25 @@ function ProductInformation() {
   const currentProducts = products.slice(startIndex, endIndex);
 
   return (
-    <>
-      <MDBox pt={3} px={2}>
-        <MDTypography variant="h6" fontWeight="medium">
-          Liste des produits
-        </MDTypography>
-      </MDBox>
+    <div>
       <MDBox pt={1} pb={2} px={2}>
         {loading ? (
-          <MDBox
-            display="flex"
-            justifyContent="center"
-            alignItems="center"
-            height="100px"
-          >
+          <MDBox display="flex" justifyContent="center" alignItems="center" height="100px">
             <CircularProgress color="info" />
           </MDBox>
         ) : (
           <>
-            <MDBox
-              component="ul"
-              display="flex"
-              flexDirection="column"
-              p={0}
-              m={0}
-            >
+            <MDBox component="ul" display="flex" flexDirection="column" p={0} m={0}>
               {currentProducts.map((product) => (
-                <Product key={product.id} {...product} />
+                <Product key={product.id} {...product} quantity={product.quantity.toString()} />
               ))}
             </MDBox>
             {totalPages > 1 && products.length > 5 && (
-              <MDBox
-                display="flex"
-                justifyContent="center"
-                alignItems="center"
-                mt={2}
-              >
+              <MDBox display="flex" justifyContent="center" alignItems="center" mt={2}>
                 <MDBox mr={2}>
                   <MDButton
                     variant="contained"
-                    color="primary"
+                    color="info"
                     disabled={currentPage === 1}
                     onClick={handlePreviousPage}
                   >
@@ -95,7 +77,7 @@ function ProductInformation() {
                 <MDBox>
                   <MDButton
                     variant="contained"
-                    color="primary"
+                    color="info"
                     disabled={currentPage === totalPages}
                     onClick={handleNextPage}
                   >
@@ -107,8 +89,8 @@ function ProductInformation() {
           </>
         )}
       </MDBox>
-    </>
+    </div>
   );
 }
 
-export default ProductInformation;
+export default ListItem;

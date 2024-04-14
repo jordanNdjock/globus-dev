@@ -9,8 +9,8 @@ import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
 
 // Billing page components
-import PaymentMethod from "layouts/produits/components/PaymentMethod";
-import BillingInformation from "layouts/produits/components/BillingInformation";
+import Header from "layouts/produits/components/Header";
+import ListItem from "layouts/produits/components/ListItem";
 
 export default function Produit() {
   return (
@@ -22,8 +22,8 @@ export default function Produit() {
             <Grid item xs={12} lg={12}>
               <Grid container spacing={3}>
                 <Grid item xs={12}>
-                  <PaymentMethod />
-                  <BillingInformation />
+                  <Header />
+                  <ListItem />
                 </Grid>
               </Grid>
             </Grid>

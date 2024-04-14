@@ -1,18 +1,3 @@
-/**
-=========================================================
-* Material Dashboard 2 React - v2.2.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/material-dashboard-react
-* Copyright 2023 Creative Tim (https://www.creative-tim.com)
-
-Coded by www.creative-tim.com
-
- =========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
-
 import { useState, useEffect } from "react";
 
 // react-router components
@@ -36,6 +21,7 @@ import DefaultNavbarMobile from "examples/Navbars/DefaultNavbar/DefaultNavbarMob
 
 // Material Dashboard 2 React base styles
 import breakpoints from "assets/theme/base/breakpoints";
+import logo from "assets/images/logo.png";
 
 // Material Dashboard 2 React context
 import { useMaterialUIController } from "context";
@@ -90,7 +76,8 @@ function DefaultNavbar({ transparent, light, action }) {
         display="flex"
         justifyContent="space-between"
         alignItems="center"
-        position="absolute"
+        position="fixed" // Utiliser position: fixed au lieu de position: absolute
+        top={0} //
         left={0}
         zIndex={9}
         sx={({
@@ -110,14 +97,30 @@ function DefaultNavbar({ transparent, light, action }) {
           lineHeight={1}
           pl={{ xs: 0, lg: 1 }}
         >
-          <MDTypography
-            variant="button"
-            fontWeight="bold"
-            color={light ? "white" : "dark"}
-            style={{ fontSize: "30px" }}
-          >
-            Globus
-          </MDTypography>
+          <MDBox
+              py={transparent ? 1.5 : 0.75}
+              lineHeight={1}
+              pl={{ xs: 0, lg: 1 }}
+              display="flex"
+              alignItems="center"
+            >
+              {/* Ajoutez votre image de logo ici */}
+              <img
+                src={logo}
+                alt="Logo"
+                style={{ marginRight: "8px", width: "40px", height: "40px" }}
+              />
+              
+              {/* Texte "Globus" */}
+              <MDTypography
+                variant="button"
+                fontWeight="bold"
+                style={{ fontSize: "30px", color: "#3db06d" }}
+              >
+                GLOBUS
+              </MDTypography>
+            </MDBox>
+
         </MDBox>
         <MDBox color="inherit" display={{ xs: "none", lg: "flex" }} m={0} p={0}>
           <DefaultNavbarLink

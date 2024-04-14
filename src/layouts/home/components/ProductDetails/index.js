@@ -1,26 +1,28 @@
 import { useParams, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getDoc, doc } from "firebase/firestore";
-import { db } from "../../backend_config"; // Assurez-vous d'importer votre instance Firebase
+import { db } from "../../../../backend_config"; // Assurez-vous d'importer votre instance Firebase
 import { Card, CircularProgress } from "@mui/material";
 import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
-import DashboardNavbar from "examples/Navbars/DashboardNavbar";
-import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import MDButton from "components/MDButton";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import Footer from "examples/Footer";
 import { fetchCategory } from "service/Produit";
+import WhatsAppIcon from '@mui/icons-material/WhatsApp';
+import DefaultNavbar from "examples/Navbars/DefaultNavbar";
+import PageLayout from "examples/LayoutContainers/PageLayout";
 
-const ProductDetails = () => {
-  const { id } = useParams();
+const HomeProductDetails = () => {
+  const { idProduct } = useParams();
+  console.log(idProduct);
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [category, setCategory] = useState("");
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const productRef = doc(db, "products", id);
+        const productRef = doc(db, "products", idProduct);
         const productDoc = await getDoc(productRef);
         if (productDoc.exists()) {
           setProduct(productDoc.data());
@@ -55,8 +57,8 @@ const ProductDetails = () => {
   }
 
   return (
-    <DashboardLayout>
-      <DashboardNavbar />
+    <PageLayout>
+      <DefaultNavbar />
       <Card
         variant="outlined"
         sx={{
@@ -64,7 +66,10 @@ const ProductDetails = () => {
           borderRadius: "8px",
           boxShadow: 1,
           marginBottom: "1rem",
-          height: "auto",
+          marginTop: "10rem",
+          display: "flex", // Pour activer le modèle de boîte flexible
+          justifyContent: "center", // Pour centrer horizontalement
+          alignItems: "center", // Pour centrer verticalement
           flexDirection: { xs: "column", sm: "row" },
         }}
       >
@@ -78,12 +83,12 @@ const ProductDetails = () => {
           borderRadius="8px"
           boxShadow={1}
           bgcolor="black"
-          width="50%"
+          width="100%"
         >
           <img src={product.imageUrl} alt="Product" style={{ maxWidth: "100%", height: "auto" }} />
         </MDBox>
 
-        <MDBox width="50%" p={2} ml={{ xs: 0, sm: 2 }}>
+        <MDBox width="100%" p={2} ml={{ xs: 0, sm: 2 }}>
           <MDTypography variant="h3" fontWeight="medium" textTransform="capitalize" mb={1}>
             {product.productName}
           </MDTypography>
@@ -103,7 +108,7 @@ const ProductDetails = () => {
               WebkitBoxOrient: "vertical",
             }}
           >
-            <MDTypography variant="h5" fontWeight="medium" style={{ textAlign: "justify" }}>
+            <MDTypography variant="h4" fontWeight="medium" style={{ textAlign: "justify" }}>
               {product.description}
             </MDTypography>
           </MDBox>
@@ -114,7 +119,7 @@ const ProductDetails = () => {
             alignItems="center"
             mb={1}
           >
-            <MDTypography variant="h6" fontWeight="medium">
+            <MDTypography variant="h5" fontWeight="medium">
               <span style={{ color: "blue" }}> Prix :</span> {product.price} Fcfa
             </MDTypography>
           </MDBox>
@@ -125,7 +130,7 @@ const ProductDetails = () => {
             alignItems="center"
             mb={1}
           >
-            <MDTypography variant="h6" fontWeight="medium">
+            <MDTypography variant="h5" fontWeight="medium">
               <span style={{ color: "blue" }}>Quantité :</span> {product.quantity}
             </MDTypography>
           </MDBox>
@@ -136,9 +141,17 @@ const ProductDetails = () => {
             alignItems="center"
             mb={1}
           >
-            <MDTypography variant="h6" fontWeight="medium">
+            <MDTypography variant="h5" fontWeight="medium">
               <span style={{ color: "blue" }}>Catégorie :</span> {category}
             </MDTypography>
+          </MDBox>
+          <MDBox
+            display="flex"
+            justifyContent="space-between"
+            fontWeight="medium"
+            alignItems="center"
+            mb={1}
+          >
           </MDBox>
           <MDBox
             display="flex"
@@ -154,14 +167,19 @@ const ProductDetails = () => {
               </audio>
             )}
           </MDBox>
-          <MDButton variant="contained" color="info" component={Link} to="/produits">
+          <MDButton variant="contained" color="info" component={Link} to="/">
             <ArrowBackIcon /> &nbsp;Retour
+          </MDButton>
+          <MDButton variant="contained" color="success" component={Link} 
+          to={`https://wa.me/+237670859323?text=Salut%20je%20suis%20intéressé%20par%20le%20produit%20:%20${product.productName}%20que%20j'ai%20vu%20sur%20votre%20plateforme%20en%20ligne%20et%20j'aimerai%20avoir%20plus%20d'informations%20concernant%20la%20livraison%20du%20produit`} 
+          style={{ marginLeft: "10px"}}>
+              Nous contacter <WhatsAppIcon />
           </MDButton>
         </MDBox>
       </Card>
       <Footer />
-    </DashboardLayout>
+    </PageLayout>
   );
 };
 
-export default ProductDetails;
+export default HomeProductDetails;

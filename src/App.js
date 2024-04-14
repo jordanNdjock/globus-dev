@@ -12,6 +12,7 @@ import brandWhite from "assets/images/logo-ct.png";
 import brandDark from "assets/images/logo-ct-dark.png";
 import SignIn from "layouts/authentication/sign-in";
 import ProductDetails from "layouts/produits/ProductDetails";
+import HomeProductDetails from "layouts/home/components/ProductDetails";
 import Produit from "layouts/produits";
 import Home from "layouts/home";
 
@@ -81,7 +82,8 @@ function App() {
         ))}
         <Route path="/login" element={<SignIn />} />
         <Route path="/" element={<Home />} />
-        <Route path="/produits/:productName" element={<ProductDetails />} />
+        <Route path="/produits/:id" element={<ProductDetails />} />
+        <Route path="/home/:idProduct" element={<HomeProductDetails />} />
         <Route path="/produits" element={<Produit />} />
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>

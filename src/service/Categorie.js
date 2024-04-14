@@ -7,7 +7,7 @@ import {
   deleteDoc,
   updateDoc,
 } from "firebase/firestore";
-import app from "../firebase"; // Assurez-vous que le chemin vers votre fichier firebase.js est correct
+import app from "../backend_config"; // Assurez-vous que le chemin vers votre fichier firebase.js est correct
 
 const db = getFirestore(app);
 
