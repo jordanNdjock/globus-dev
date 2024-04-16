@@ -6,6 +6,8 @@ import {
   doc,
   deleteDoc,
   getDoc,
+  query,
+  where,
   updateDoc,
 } from "firebase/firestore";
 import { getStorage, ref, uploadString, getDownloadURL, deleteObject } from "firebase/storage";
@@ -202,7 +204,7 @@ export async function getProductsByCategory(categoryId) {
     products.push({ id: doc.id, ...doc.data() });
   });
   return products;
-}[]
+}
 
 // Fonction pour obtenir la catégorie d'un produit
 export async function getCategoriesByProduct(productId) {

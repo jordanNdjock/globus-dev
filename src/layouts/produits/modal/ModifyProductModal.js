@@ -18,10 +18,7 @@ function ModifyProductModal({
   handleSubmit,
   initialProduct,
 }) {
-  // Vérifier si initialProduct est null
-  if (!initialProduct) {
-    return null;
-  }
+  
 
   // State pour les champs modifiables
   const [editedProduct, setEditedProduct] = useState(initialProduct);
@@ -85,7 +82,10 @@ const handleClearAudio = () => {
 };
 
 
-
+// Vérifier si initialProduct est null
+if (!initialProduct) {
+  return null;
+}
 
 
   

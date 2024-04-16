@@ -5,6 +5,8 @@ import {
   getDocs,
   doc,
   deleteDoc,
+  where,
+  query,
   updateDoc,
 } from "firebase/firestore";
 import app from "../backend_config"; // Assurez-vous que le chemin vers votre fichier firebase.js est correct
@@ -52,15 +54,28 @@ export async function updateCategory(categoryId, newName, newDescription) {
   }
 }
 
-// Fonction pour supprimer une catégorie
+// Fonction pour supprimer une catégorie et tous ses produits
 export async function deleteCategory(categoryId) {
   const categoryRef = doc(db, "categories", categoryId);
   try {
+    // Supprimer la catégorie
     await deleteDoc(categoryRef);
-    console.log("Document successfully deleted!");
+    console.log("Category document successfully deleted!");
+
+    // Obtenir tous les produits de la catégorie spécifiée
+    const productsQuerySnapshot = await getDocs(query(collection(db, "products"), where("id_category", "==", categoryId)));
+
+    // Supprimer chaque produit de la catégorie
+    productsQuerySnapshot.forEach(async (productDoc) => {
+      await deleteDoc(productDoc.ref);
+      console.log(`Product document ${productDoc.id} successfully deleted.`);
+    });
+
+    console.log("All products of the category successfully deleted!");
     return true;
   } catch (e) {
-    console.error("Error removing document: ", e);
+    console.error("Error removing category or products: ", e);
     return false;
   }
 }
+

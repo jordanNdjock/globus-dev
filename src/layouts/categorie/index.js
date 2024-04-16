@@ -10,7 +10,6 @@ import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
 import Card from "@mui/material/Card";
-import Button from "@mui/material/Button";
 
 import Box from "@mui/material/Box";
 // Billing page components
@@ -28,7 +27,7 @@ export default function Categorie() {
   const [loading, setLoading] = useState(true); // État pour gérer le chargement
 
   const [open, setOpen] = React.useState(false);
-  const handleOpen = () => setOpen(true);
+  // const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
   // Utilisez useEffect pour charger les catégories une seule fois au chargement du composant
@@ -52,7 +51,7 @@ export default function Categorie() {
   const handleDeleteCategory = async (id) => {
     // Affichez la boîte de dialogue de confirmation
     const result = await Swal.fire({
-      title: "Êtes-vous sûr de vouloir supprimer cette catégorie ?",
+      title: "Êtes-vous sûr de vouloir supprimer cette catégorie et tous les produits ayant cette categorie ?",
       text: "Cette action est irréversible !",
       icon: "warning",
       showCancelButton: true,
