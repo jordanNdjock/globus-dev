@@ -7,6 +7,8 @@ import {
   deleteDoc,
   getDoc,
   updateDoc,
+  where,
+  query,
 } from "firebase/firestore";
 import { getStorage, ref, uploadString, getDownloadURL, deleteObject } from "firebase/storage";
 import app from "../backend_config"; // Assurez-vous que le chemin vers votre fichier firebase.js est correct
@@ -48,7 +50,6 @@ export async function addProduct(
       audioUrl = await getDownloadURL(audioRef);
     }
 
-
     // Ajouter le produit à la collection des produits
     const docRef = await addDoc(productsRef, {
       productName: productName,
@@ -79,11 +80,8 @@ export async function getAllProducts() {
   return products;
 }
 
-
 // Fonction pour mettre à jour un produit avec téléversement d'images et d'audio
-export async function updateProduct(
-  product
-) {
+export async function updateProduct(product) {
   try {
     console.log(product.id);
     const storage = getStorage();
@@ -150,24 +148,24 @@ export async function updateProduct(
 export async function deleteProduct(productId) {
   try {
     console.log(productId);
-  
+
     // Vérifier si productId est défini
     if (!productId) {
       throw new Error("Product ID is not defined");
     }
-  
+
     // Récupérer la référence du document produit depuis Firestore
     const productRef = doc(db, "products", productId);
-  
+
     // Vérifier si le document existe
     const productSnap = await getDoc(productRef);
     if (productSnap.exists()) {
       const productData = productSnap.data();
-  
+
       // Supprimer le document de Firestore
       await deleteDoc(productRef);
       console.log("Product document deleted successfully");
-  
+
       // Vérifier si imageUrl est défini
       if (productData.imageUrl) {
         // Supprimer le fichier image correspondant de Firebase Storage
@@ -176,7 +174,7 @@ export async function deleteProduct(productId) {
         await deleteObject(imageRef);
         console.log("Image file deleted successfully");
       }
-  
+
       // Vérifier si audioUrl est défini
       if (productData.audio) {
         // Supprimer le fichier audio correspondant de Firebase Storage
@@ -190,7 +188,7 @@ export async function deleteProduct(productId) {
     }
   } catch (error) {
     console.error("Error deleting product and files:", error);
-  }  
+  }
 }
 
 // Fonction pour obtenir une liste de produits en fonction d'une catégorie
@@ -202,7 +200,7 @@ export async function getProductsByCategory(categoryId) {
     products.push({ id: doc.id, ...doc.data() });
   });
   return products;
-}[]
+}
 
 // Fonction pour obtenir la catégorie d'un produit
 export async function getCategoriesByProduct(productId) {
@@ -234,4 +232,3 @@ export const fetchCategory = async (id_category) => {
     return null;
   }
 };
-

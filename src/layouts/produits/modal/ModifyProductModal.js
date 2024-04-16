@@ -12,21 +12,10 @@ import MusicNoteIcon from "@mui/icons-material/MusicNote";
 import MenuItem from "@mui/material/MenuItem";
 import { getAllCategories } from "../../../service/Categorie";
 
-function ModifyProductModal({
-  open,
-  handleClose,
-  handleSubmit,
-  initialProduct,
-}) {
-  // Vérifier si initialProduct est null
-  if (!initialProduct) {
-    return null;
-  }
-
+function ModifyProductModal({ open, handleClose, handleSubmit, initialProduct }) {
   // State pour les champs modifiables
   const [editedProduct, setEditedProduct] = useState(initialProduct);
   const [categories, setCategories] = useState([]);
-
 
   useEffect(() => {
     const fetchCategoriesData = async () => {
@@ -62,33 +51,33 @@ function ModifyProductModal({
     setEditedProduct({ ...editedProduct, [name]: value });
   };
 
-// Gestion audio
-const handleAudioChange = (event) => {
-  const file = event.target.files[0];
-  if (file) {
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setEditedProduct((prevProduct) => ({
-        ...prevProduct,
-        audio: reader.result,
-      }));
-    };
-    reader.readAsDataURL(file);
+  // Gestion audio
+  const handleAudioChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setEditedProduct((prevProduct) => ({
+          ...prevProduct,
+          audio: reader.result,
+        }));
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleClearAudio = () => {
+    setEditedProduct((prevProduct) => ({
+      ...prevProduct,
+      audio: "",
+    }));
+  };
+
+  // Vérifier si initialProduct est null
+  if (!initialProduct) {
+    return null;
   }
-};
 
-const handleClearAudio = () => {
-  setEditedProduct((prevProduct) => ({
-    ...prevProduct,
-    audio: "",
-  }));
-};
-
-
-
-
-
-  
   return (
     <Modal open={open} onClose={handleClose}>
       <Box
@@ -157,11 +146,7 @@ const handleClearAudio = () => {
             style={{ display: "none" }}
           />
           <label htmlFor="image-upload">
-            <IconButton
-              color="primary"
-              aria-label="upload picture"
-              component="span"
-            >
+            <IconButton color="primary" aria-label="upload picture" component="span">
               <PhotoCamera />
             </IconButton>
           </label>
@@ -259,17 +244,17 @@ const handleClearAudio = () => {
             Choisir un fichier audio
           </Typography>
         </Box>
-          {editedProduct.audio && (
-            <>
-              <audio controls>
-                <source src={editedProduct.audio} type="audio/mp3" />
-                Votre navigateur ne supporte pas l'audio HTML5.
-              </audio>
-              <IconButton color="error" aria-label="clear audio" onClick={handleClearAudio}>
-                  <DeleteIcon />
-              </IconButton>
-            </>
-            )}
+        {editedProduct.audio && (
+          <>
+            <audio controls>
+              <source src={editedProduct.audio} type="audio/mp3" />
+              Votre navigateur ne supporte pas l'audio HTML5.
+            </audio>
+            <IconButton color="error" aria-label="clear audio" onClick={handleClearAudio}>
+              <DeleteIcon />
+            </IconButton>
+          </>
+        )}
 
         {/* Bouton de modification */}
         <Box textAlign="right" mt={3}>
@@ -292,7 +277,7 @@ ModifyProductModal.propTypes = {
   open: PropTypes.bool.isRequired,
   handleClose: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,
-  initialProduct: PropTypes.object,
+  initialProduct: PropTypes.object.isRequired,
 };
 
 export default ModifyProductModal;
