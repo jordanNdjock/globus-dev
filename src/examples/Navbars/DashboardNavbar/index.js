@@ -83,7 +83,7 @@ function DashboardNavbar({ absolute, light, isMini }) {
         .then(() => {
           localStorage.removeItem("token");
           Swal.fire("Deconnecté !", "Deconnexion réussie !", "success");
-          navigate("/login");
+          navigate("/");
         })
         .catch((error) => {
           console.log("Erreur de deconnexion !");

@@ -4,50 +4,59 @@ import MDTypography from "components/MDTypography";
 import Item from "layouts/home/components/Item";
 import CircularProgress from "@mui/material/CircularProgress";
 import MDButton from "@mui/material/Button";
-import CustomizedInputBase from "./CustomizedInputBase";
+// import CustomizedInputBase from "./CustomizedInputBase";
 import Grid from "@mui/material/Grid";
 import { collection, onSnapshot, orderBy, query, where } from "firebase/firestore";
 import { db } from "../../../../backend_config";
 
-function ListItem() {
+function ListItem({id_category}) {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
-  const [searchQuery, setSearchQuery] = useState("");
+  // const [searchQuery, setSearchQuery] = useState("");
   
   useEffect(() => {
-    const unsubscribe = onSnapshot(
-      query(collection(db, "products"), orderBy("created", "desc")),
-      (snapshot) => {
-        const products = [];
-        snapshot.forEach((doc) => {
-          products.push({ id: doc.id, ...doc.data() });
-        });
-        setProducts(products);
-        setLoading(false);
-      }
-    );
-  
-    // Retourner la fonction de désabonnement
-    return () => unsubscribe();
-  }, []);
-  
-  const handleSearch = () => {
-    // Rechercher les produits correspondant à la requête de recherche
-    if (searchQuery.trim() !== "") {
-      setLoading(true);
-      const searchResults = [];
-      products.forEach((product) => {
-        if (product.category.toLowerCase().includes(searchQuery.toLowerCase())) {
-          searchResults.push(product);
-        }
-      });
-      setProducts(searchResults);
-      setLoading(false);
-    }
-  };
+    const fetchProducts = async () => {
+      let productsQuery = query(collection(db, "products"), orderBy("created", "desc"));
 
-  const productsPerPage = 6;
+      if (id_category !== "") {
+        // Si id_category n'est pas vide, ajoutez le filtre de catégorie à la requête
+        productsQuery = query(collection(db, "products"), 
+                              where("id_category", "==", id_category), 
+                              orderBy("created", "desc"));
+      }
+
+      const unsubscribe = onSnapshot(productsQuery, (snapshot) => {
+        const productsData = [];
+        snapshot.forEach((doc) => {
+          productsData.push({ id: doc.id, ...doc.data() });
+        });
+        setProducts(productsData);
+        setLoading(false);
+      });
+
+      return () => unsubscribe();
+    };
+
+    fetchProducts();
+  }, [id_category]);
+  
+  // const handleSearch = () => {
+  //   // Rechercher les produits correspondant à la requête de recherche
+  //   if (searchQuery.trim() !== "") {
+  //     setLoading(true);
+  //     const searchResults = [];
+  //     products.forEach((product) => {
+  //       if (product.category.toLowerCase().includes(searchQuery.toLowerCase())) {
+  //         searchResults.push(product);
+  //       }
+  //     });
+  //     setProducts(searchResults);
+  //     setLoading(false);
+  //   }
+  // };
+
+  const productsPerPage = 9;
   const totalPages = Math.ceil(products.length / productsPerPage);
 
   const handleNextPage = () => {
@@ -95,14 +104,14 @@ function ListItem() {
                 </MDTypography>
               ) : (
                 currentProducts.map((product, index) => (
-                  <Grid key={product.id} item xs={12} sm={6} md={4} lg={4} style={{ display: index > 2 ? 'block' : 'flex' }}>
+                  <Grid key={product.id} item xs={12} sm={6} md={4} lg={4} >
                     <Item {...product} />
                   </Grid>
                 ))
               )}
             </MDBox>
 
-            {totalPages > 1 && products.length > 6 && (
+            {totalPages > 1 && products.length > 9 && (
               <MDBox display="flex" justifyContent="center" alignItems="center" mt={2}>
                 <MDBox mr={2}>
                   <MDButton

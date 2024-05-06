@@ -9,13 +9,12 @@ import MDButton from "components/MDButton";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import Footer from "examples/Footer";
 import { fetchCategory } from "service/Produit";
-import WhatsAppIcon from '@mui/icons-material/WhatsApp';
+// import WhatsAppIcon from '@mui/icons-material/WhatsApp';
 import DefaultNavbar from "examples/Navbars/DefaultNavbar";
 import PageLayout from "examples/LayoutContainers/PageLayout";
 
 const HomeProductDetails = () => {
   const { idProduct } = useParams();
-  console.log(idProduct);
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [category, setCategory] = useState("");
@@ -37,9 +36,9 @@ const HomeProductDetails = () => {
         setLoading(false);
       }
     };
-    
+
     fetchProduct();
-  }, []);
+  }, [idProduct]);
   
   if (loading) {
     return (
@@ -151,8 +150,7 @@ const HomeProductDetails = () => {
             fontWeight="medium"
             alignItems="center"
             mb={1}
-          >
-          </MDBox>
+          ></MDBox>
           <MDBox
             display="flex"
             justifyContent="space-between"
@@ -170,11 +168,12 @@ const HomeProductDetails = () => {
           <MDButton variant="contained" color="info" component={Link} to="/">
             <ArrowBackIcon /> &nbsp;Retour
           </MDButton>
-          <MDButton variant="contained" color="success" component={Link} 
-          to={`https://wa.me/+237670859323?text=Salut%20je%20suis%20intéressé%20par%20le%20produit%20:%20${product.productName}%20que%20j'ai%20vu%20sur%20votre%20plateforme%20en%20ligne%20et%20j'aimerai%20avoir%20plus%20d'informations%20concernant%20la%20livraison%20du%20produit`} 
-          style={{ marginLeft: "10px"}}>
-              Nous contacter <WhatsAppIcon />
-          </MDButton>
+          {/* <a href={product.imageUrl} style={{ textDecoration: "none" }} >
+            <MDButton variant="contained" color="success" style={{ marginLeft: "10px" }}>
+              Voir <CloudDownloadIcon />
+            </MDButton>
+          </a> */}
+
         </MDBox>
       </Card>
       <Footer />

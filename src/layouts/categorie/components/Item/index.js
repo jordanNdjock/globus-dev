@@ -44,6 +44,7 @@ function Item({ id, name, description, noGutter, onDelete }) {
   const [descriptionPrint, setDescriptionP] = React.useState(description || "");
   const [nameUpdate, setName] = React.useState(name || "");
   const [descriptionUpdate, setDescription] = React.useState(description || "");
+  const [serverDomain, setServerDomain] = React.useState("");
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -64,6 +65,20 @@ function Item({ id, name, description, noGutter, onDelete }) {
         "error"
       );
     }
+  };
+
+  React.useEffect(() => {
+    const fetchServerDomain = async () => {
+      // Récupérer le nom de domaine du serveur
+      const domain = window.location.origin;
+      setServerDomain(domain);
+    };
+
+    fetchServerDomain();
+  }, []);
+
+  const generateLink = () => {
+    return `${serverDomain}/${id}`;
   };
 
   return (
@@ -112,6 +127,14 @@ function Item({ id, name, description, noGutter, onDelete }) {
               Description:&nbsp;&nbsp;&nbsp;
               <MDTypography variant="caption" fontWeight="medium" textTransform="capitalize">
                 {descriptionPrint}
+              </MDTypography>
+            </MDTypography>
+          </MDBox>
+          <MDBox mb={1} lineHeight={0}>
+            <MDTypography variant="caption" color="text">
+              Lien :&nbsp;&nbsp;&nbsp;
+              <MDTypography variant="caption" fontWeight="medium" textTransform="capitalize">
+                <a href={generateLink()}>{generateLink()}</a>
               </MDTypography>
             </MDTypography>
           </MDBox>
@@ -164,7 +187,7 @@ function Item({ id, name, description, noGutter, onDelete }) {
               }}
               sx={{ mt: 2, backgroundColor: "blue" }}
             >
-                  Modifier
+              Modifier
             </Button>
           </Box>
         </Fade>
