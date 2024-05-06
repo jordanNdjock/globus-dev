@@ -62,7 +62,7 @@ function Item({ id, productName, description, price, quantity, imageUrl, id_cate
     await handleChangeQuantity(productName, newQuantity);
   };
 
-  const handleDecrease = async () => {
+  const   handleDecrease = async () => {
     if (productQuantity > 0) {
       setProductQuantity(productQuantity - 1);
       const newQuantity = productQuantity - 1;
@@ -70,10 +70,11 @@ function Item({ id, productName, description, price, quantity, imageUrl, id_cate
     }
   };
 
-  const handleOpenModal = (product) => {
-    setProductToModify(product);
-    setOpenModal(true);
-  };
+  // const handleOpenModal = (product) => {
+  //   setProductToModify(product);
+  //   setOpenModal(true);
+  // };
+
   const handleSuccessAlertClose = () => {
     setSuccessAlertOpen(false);
   };
@@ -180,10 +181,8 @@ function Item({ id, productName, description, price, quantity, imageUrl, id_cate
                 border: "1px solid #ced4da",
                 borderRadius: "4px",
                 outline: "none",
-                borderRadius: "4px",
                 padding: "8px 12px",
                 fontSize: "14px",
-                outline: "none",
               }}
             />
             <MDButton onClick={handleIncrease} variant="contained" size="small" color="success">
@@ -204,7 +203,7 @@ function Item({ id, productName, description, price, quantity, imageUrl, id_cate
               <Icon>delete</Icon>
             </MDButton>
           </MDBox>
-          <MDBox mr={1}>
+          {/* <MDBox mr={1}>
             <MDButton
               variant="contained"
               color="dark"
@@ -225,7 +224,7 @@ function Item({ id, productName, description, price, quantity, imageUrl, id_cate
             >
               <Icon>edit</Icon>
             </MDButton>
-          </MDBox>
+          </MDBox> */}
           <MDBox display="flex" alignItems="center">
             <Link to={`/produits/${id}`} color="dark">
               <MDButton
@@ -256,7 +255,7 @@ function Item({ id, productName, description, price, quantity, imageUrl, id_cate
             <MenuItem onClick={() =>handleDelete(id)}>
               Supprimer &nbsp;<Icon color="error">delete</Icon>
             </MenuItem>
-            <MenuItem
+            {/* <MenuItem
               onClick={() =>
                 handleOpenModal({
                   id,
@@ -271,7 +270,7 @@ function Item({ id, productName, description, price, quantity, imageUrl, id_cate
               }
             >
               Modifier &nbsp;<Icon color="info">edit</Icon>
-            </MenuItem>
+            </MenuItem> */}
             <Link to={`/produits/${id}`} color="dark">
               <MenuItem>
                 Voir détails &nbsp;<Icon>visibility</Icon>

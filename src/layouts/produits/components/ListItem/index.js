@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import MDBox from "components/MDBox";
-import MDTypography from "components/MDTypography";
+// import MDTypography from "components/MDTypography";
 import Product from "layouts/produits/components/Item";
 import CircularProgress from "@mui/material/CircularProgress";
 import MDButton from "@mui/material/Button";
@@ -29,7 +29,7 @@ function ListItem() {
     return () => unsubscribe();
   }, []);
 
-  const productsPerPage = 5;
+  const productsPerPage = 9;
   const totalPages = Math.ceil(products.length / productsPerPage);
 
   const handleNextPage = () => {
@@ -62,7 +62,7 @@ function ListItem() {
                 <Product key={product.id} {...product} quantity={product.quantity.toString()} />
               ))}
             </MDBox>
-            {totalPages > 1 && products.length > 5 && (
+            {totalPages > 1 && products.length > 9 && (
               <MDBox display="flex" justifyContent="center" alignItems="center" mt={2}>
                 <MDBox mr={2}>
                   <MDButton

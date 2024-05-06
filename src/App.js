@@ -81,7 +81,7 @@ function App() {
           />
         ))}
         <Route path="/login" element={<SignIn />} />
-        <Route path="/" element={<Home />} />
+        <Route path="/:category?" element={<Home />} />
         <Route path="/produits/:id" element={<ProductDetails />} />
         <Route path="/home/:idProduct" element={<HomeProductDetails />} />
         <Route path="/produits" element={<Produit />} />
