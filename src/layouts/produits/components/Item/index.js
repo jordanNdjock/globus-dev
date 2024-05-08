@@ -266,7 +266,7 @@ function Item({ id, productName, description, price, quantity, imageUrl, id_cate
                   imageUrl,
                   id_category,
                   audio,
-                })
+                })uu
               }
             >
               Modifier &nbsp;<Icon color="info">edit</Icon>

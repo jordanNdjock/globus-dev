@@ -7,6 +7,7 @@ import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
 import MDButton from "components/MDButton";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+// import CloudDownloadIcon from "@mui/icons-material/CloudDownloadIcon";
 import Footer from "examples/Footer";
 import { fetchCategory } from "service/Produit";
 // import WhatsAppIcon from '@mui/icons-material/WhatsApp';
@@ -168,11 +169,11 @@ const HomeProductDetails = () => {
           <MDButton variant="contained" color="info" component={Link} to="/">
             <ArrowBackIcon /> &nbsp;Retour
           </MDButton>
-          {/* <a href={product.imageUrl} style={{ textDecoration: "none" }} >
+          <a href={product.imageUrl} style={{ textDecoration: "none" }} >
             <MDButton variant="contained" color="success" style={{ marginLeft: "10px" }}>
-              Voir <CloudDownloadIcon />
+              Telecharger 
             </MDButton>
-          </a> */}
+          </a>
 
         </MDBox>
       </Card>

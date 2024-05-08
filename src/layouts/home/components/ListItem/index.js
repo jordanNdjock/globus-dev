@@ -119,6 +119,7 @@ function ListItem({id_category}) {
                     color="primary"
                     disabled={currentPage === 1}
                     onClick={handlePreviousPage}
+                    style={{color : 'white'}}
                   >
                     Page précédente
                   </MDButton>
@@ -129,6 +130,7 @@ function ListItem({id_category}) {
                     color="primary"
                     disabled={currentPage === totalPages}
                     onClick={handleNextPage}
+                    style={{color : 'white'}}
                   >
                     Page suivante
                   </MDButton>
